@@ -1,52 +1,32 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace EoneoPay\ApiFormats;
 
 use EoneoPay\ApiFormats\Interfaces\FormattedApiResponseInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This class has for purpose to easily customise status code and/or headers for given content.
  */
-class FormattedApiResponse implements FormattedApiResponseInterface
+class FormattedApiResponse extends Response implements FormattedApiResponseInterface
 {
-    /**
-     * @var mixed
-     */
-    private $content;
-
-    /**
-     * @var array
-     */
-    private $headers;
-
-    /**
-     * @var int
-     */
-    private $statusCode;
-
     /**
      * FormattedApiResponse constructor.
      *
-     * @param mixed      $content
-     * @param int|null   $statusCode
+     * @param mixed $content
+     * @param int|null $statusCode
      * @param array|null $headers
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct($content, int $statusCode = null, array $headers = null)
     {
+        parent::__construct();
+
         $this->content = $content;
         $this->statusCode = $statusCode ?? 200;
         $this->headers = $headers ?? [];
-    }
-
-    /**
-     * Get content.
-     *
-     * @return mixed
-     */
-    public function getContent()
-    {
-        return $this->content;
     }
 
     /**
@@ -66,6 +46,6 @@ class FormattedApiResponse implements FormattedApiResponseInterface
      */
     public function getStatusCode(): int
     {
-        return $this->statusCode;
+        return parent::getStatusCode();
     }
 }
