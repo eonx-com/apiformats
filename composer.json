@@ -6,14 +6,20 @@
   "type": "package",
   "require": {
     "php": ">=7.1",
-    "symfony/http-kernel": "^4.0",
-    "symfony/dependency-injection": "^4.0",
-    "symfony/config": "^4.0",
-    "symfony/yaml": "^4.0"
+    "roave/security-advisories": "dev-master",
+    "symfony/psr-http-message-bridge": "^1.0",
+    "zendframework/zend-diactoros": "^1.7"
   },
   "require-dev": {
+    "illuminate/http": "^5.5",
     "phpunit/phpunit": "^6.5",
-    "mockery/mockery": "^1.0"
+    "mockery/mockery": "^1.0",
+    "guzzlehttp/psr7": "^1.4",
+    "illuminate/support": "^5.5"
+  },
+  "suggest": {
+    "illuminate/http": "To use the Laravel implementation",
+    "illuminate/support": "To use Laravel service provider"
   },
   "autoload": {
     "psr-4": { "EoneoPay\\ApiFormats\\": "src/" }

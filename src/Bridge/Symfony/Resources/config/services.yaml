@@ -1,7 +1,0 @@
-services:
-    eoneopay_api.set_format_listener:
-        class: EoneoPay\ApiFormats\EventListeners\SetFormatOnRequestListener
-        arguments:
-            - "%eoneopay_api_formats.supported%"
-        tags:
-            - { name: kernel.event_listener, event: kernel.request }
