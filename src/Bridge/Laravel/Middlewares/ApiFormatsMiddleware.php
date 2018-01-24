@@ -46,8 +46,8 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
      * @return mixed
      *
      * @throws \Exception
-     * @throws \EoneoPay\ApiFormats\Services\Formats\Exceptions\UnsupportedRequestFormatException
-     * @throws \EoneoPay\ApiFormats\Services\Formats\Exceptions\InvalidSupportedRequestFormatsConfigException
+     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      */
     public function handle(Request $request, Closure $next)
     {

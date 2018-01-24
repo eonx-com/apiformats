@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace EoneoPay\ApiFormats;
+namespace EoneoPay\ApiFormats\Bridge\Laravel\Responses;
 
 use EoneoPay\ApiFormats\Interfaces\FormattedApiResponseInterface;
 use Symfony\Component\HttpFoundation\Response;

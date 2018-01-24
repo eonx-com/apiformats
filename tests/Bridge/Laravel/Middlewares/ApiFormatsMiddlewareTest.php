@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Tests\EoneoPay\ApiFormats\Bridge\Laravel\Middlewares;
 
 use EoneoPay\ApiFormats\Bridge\Laravel\Middlewares\ApiFormatsMiddleware;
+use EoneoPay\ApiFormats\Bridge\Laravel\Responses\FormattedApiResponse;
 use EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException;
 use EoneoPay\ApiFormats\External\Libraries\Psr7Factory;
-use EoneoPay\ApiFormats\FormattedApiResponse;
 use EoneoPay\ApiFormats\RequestEncoderGuesser;
 use EoneoPay\ApiFormats\RequestEncoders\JsonRequestEncoder;
 use EoneoPay\ApiFormats\RequestEncoders\XmlRequestEncoder;
@@ -27,9 +27,52 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
         $encoderGuesser = new RequestEncoderGuesser([JsonRequestEncoder::class => ['application/json']]);
         $request = $this->getRequest(null, ['accept' => 'invalid']);
 
-        (new ApiFormatsMiddleware($encoderGuesser, $psr7Factory))->handle($request, function () {});
+        (new ApiFormatsMiddleware($encoderGuesser, $psr7Factory))->handle($request, function () {
+        });
 
         self::assertInstanceOf(JsonRequestEncoder::class, $request->attributes->get('_encoder'));
+    }
+
+    /**
+     * Middleware should set the right encoder on the request, replace inputs on the request and return
+     * an Laravel response.
+     */
+    public function testHandleFormatsProperly(): void
+    {
+        $formats = [
+            JsonRequestEncoder::class => [
+                'mime_type' => 'application/json',
+                'content' => '{"email":"email@eoneopay.com.au"}'
+            ],
+            XmlRequestEncoder::class => [
+                'mime_type' => 'application/xml',
+                'content' => '<data><email>email@eoneopay.com.au</email></data>'
+            ]
+        ];
+
+        $middleware = new ApiFormatsMiddleware(new RequestEncoderGuesser($formats), new Psr7Factory());
+        $next = function (Request $request) {
+            return $request->all();
+        };
+
+        foreach ($formats as $encoder => $test) {
+            $request = $this->getRequest($test['content'], ['accept' => $test['mime_type']]);
+            $response = $middleware->handle($request, $next);
+
+            self::assertInstanceOf($encoder, $request->attributes->get('_encoder'));
+            self::assertInstanceOf(Response::class, $response);
+            /** @var Response $response */
+            self::assertEquals($test['mime_type'], $response->headers->get('Content-Type'));
+
+            switch ($encoder) {
+                case JsonRequestEncoder::class:
+                    self::assertEquals($test['content'], $response->getContent());
+                    break;
+                case XmlRequestEncoder::class:
+                    self::assertXmlStringEqualsXmlString($test['content'], $response->getContent());
+                    break;
+            }
+        }
     }
 
     /**
@@ -76,47 +119,5 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
         self::assertEquals($formattedApiResponse->getStatusCode(), $response->getStatusCode());
         self::assertTrue($response->headers->has('X-CUSTOM-HEADER'));
         self::assertEquals('custom', $response->headers->get('X-CUSTOM-HEADER'));
-    }
-
-    /**
-     * Middleware should set the right encoder on the request, replace inputs on the request and return
-     * an Laravel response.
-     */
-    public function testHandleFormatsProperly(): void
-    {
-        $formats = [
-            JsonRequestEncoder::class => [
-                'mime_type' => 'application/json',
-                'content' => '{"email":"email@eoneopay.com.au"}'
-            ],
-            XmlRequestEncoder::class => [
-                'mime_type' => 'application/xml',
-                'content' => '<data><email>email@eoneopay.com.au</email></data>'
-            ]
-        ];
-
-        $middleware = new ApiFormatsMiddleware(new RequestEncoderGuesser($formats), new Psr7Factory());
-        $next = function (Request $request) {
-            return $request->all();
-        };
-
-        foreach ($formats as $encoder => $test) {
-            $request = $this->getRequest($test['content'], ['accept' => $test['mime_type']]);
-            $response = $middleware->handle($request, $next);
-
-            self::assertInstanceOf($encoder, $request->attributes->get('_encoder'));
-            self::assertInstanceOf(Response::class, $response);
-            /** @var Response $response */
-            self::assertEquals($test['mime_type'], $response->headers->get('Content-Type'));
-
-            switch ($encoder) {
-                case JsonRequestEncoder::class:
-                    self::assertEquals($test['content'], $response->getContent());
-                    break;
-                case XmlRequestEncoder::class:
-                    self::assertXmlStringEqualsXmlString($test['content'], $response->getContent());
-                    break;
-            }
-        }
     }
 }
