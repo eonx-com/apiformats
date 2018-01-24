@@ -3,4 +3,4 @@ parameters:
         - '#Call to an undefined method Illuminate\\Contracts\\Foundation\\Application::configure\(\).#'
         - '#Property Symfony\\Component\\HttpFoundation\\Response::\$headers \(Symfony\\Component\\HttpFoundation\\ResponseHeaderBag\) does not accept array.#'
         - '#Method EoneoPay\\ApiFormats\\Bridge\\Laravel\\Responses\\FormattedApiResponse::getHeaders\(\) should return array but returns Symfony\\Component\\HttpFoundation\\ResponseHeaderBag.#'
-        - '#Constructor of class Tests\\EoneoPay\\ApiFormats\\Stubs\\EncoderWithoutInterface has an unused parameter \$request.#'
+        - '#Constructor of class Tests\\EoneoPay\\ApiFormats\\Stubs\\EncoderWithoutInterface has an unused parameter \x$request.#'

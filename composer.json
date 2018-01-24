@@ -8,7 +8,8 @@
     "php": ">=7.1",
     "roave/security-advisories": "dev-master",
     "symfony/psr-http-message-bridge": "^1.0",
-    "zendframework/zend-diactoros": "^1.7"
+    "zendframework/zend-diactoros": "^1.7",
+    "eoneopay/utils": "dev-master"
   },
   "require-dev": {
     "illuminate/http": "^5.5",
@@ -27,5 +28,13 @@
   "autoload-dev": {
     "psr-4": { "Tests\\EoneoPay\\ApiFormats\\": "tests/" }
   },
-  "optimize-autoloader": true
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://git@bitbucket.org/eoneopay/utils.git"
+    }
+  ],
+  "optimize-autoloader": true,
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
