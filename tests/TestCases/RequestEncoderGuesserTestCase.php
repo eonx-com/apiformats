@@ -16,6 +16,5 @@ class RequestEncoderGuesserTestCase extends TestCase
     protected function getRequest(): ServerRequest
     {
         return new ServerRequest([], [], null, null, 'php://input', ['accept' => 'application/json']);
-
     }
 }

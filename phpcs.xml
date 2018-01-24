@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ruleset name="eoneopay/api-formats">
+    <description>Rules for eoneopay/api-formats</description>
+
+    <!-- Test all directories by default -->
+    <file>./src</file>
+    <file>./tests</file>
+
+    <!-- Exclude vendor directory by default -->
+    <exclude-pattern>./vendor</exclude-pattern>
+
+    <!-- Define output -->
+    <arg name="tab-width" value="4"/>
+    <arg name="report-full"/>
+
+    <!-- Validate against PSR1/2 -->
+    <rule ref="PSR1"/>
+    <rule ref="PSR2"/>
+</ruleset>

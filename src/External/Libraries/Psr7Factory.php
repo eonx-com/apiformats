@@ -28,15 +28,15 @@ class Psr7Factory implements Psr7FactoryInterface
     /**
      * Psr7Factory constructor.
      *
-     * @param \Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface|null $httpFoundationFactory
-     * @param \Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface|null $httpMessageFactory
+     * @param \Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface|null $httpFoundation
+     * @param \Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface|null $httpMessage
      */
     public function __construct(
-        HttpFoundationFactoryInterface $httpFoundationFactory = null,
-        HttpMessageFactoryInterface $httpMessageFactory = null
+        HttpFoundationFactoryInterface $httpFoundation = null,
+        HttpMessageFactoryInterface $httpMessage = null
     ) {
-        $this->httpFoundation = $httpFoundationFactory ?? new HttpFoundationFactory();
-        $this->httpMessage = $httpMessageFactory ?? new DiactorosFactory();
+        $this->httpFoundation = $httpFoundation ?? new HttpFoundationFactory();
+        $this->httpMessage = $httpMessage ?? new DiactorosFactory();
     }
 
     /**

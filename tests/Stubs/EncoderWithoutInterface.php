@@ -11,6 +11,8 @@ class EncoderWithoutInterface
      * EncoderWithoutInterface constructor.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter) Test purpose
      */
     public function __construct(ServerRequestInterface $request)
     {

@@ -86,6 +86,8 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
      * @param \Psr\Http\Message\ResponseInterface $response
      *
      * @return \Illuminate\Http\Response
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess) Laravel way to create response
      */
     private function laravelResponse(ResponseInterface $response): Response
     {
