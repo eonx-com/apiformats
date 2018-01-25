@@ -7,6 +7,6 @@ use EoneoPay\ApiFormats\RequestEncoders\XmlRequestEncoder;
 return [
     'formats' => [
         JsonRequestEncoder::class => ['application/json'],
-        XmlRequestEncoder::class => ['application/xml', 'text/xml']
+        XmlRequestEncoder::class => ['(application|xml)/xml']
     ]
 ];

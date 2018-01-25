@@ -80,9 +80,11 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
 
             // Retrieve MIME type from request header
             $mimeType = (string) reset($header);
+            // Get encoder class to use
+            $encoderClass = $this->getEncoderClass($mimeType);
 
             // Throw exception if not supported
-            if (!isset($this->mimeTypes[$mimeType])) {
+            if (null === $encoderClass) {
                 throw new UnsupportedRequestFormatException(\sprintf(
                     'Unsupported requested format "%s". Supported formats: [%s].',
                     $mimeType,
@@ -90,11 +92,29 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
                 ));
             }
 
-            return $this->instantiateEncoder($this->mimeTypes[$mimeType], $request);
+            return $this->instantiateEncoder($encoderClass, $request);
         }
 
         // Fallback to default format
         return $this->instantiateEncoder($this->defaultEncoder, $request);
+    }
+
+    /**
+     * Get encoder class based on given MIME type.
+     *
+     * @param string $requestMimeType
+     *
+     * @return null|string
+     */
+    private function getEncoderClass(string $requestMimeType): ?string
+    {
+        foreach ($this->mimeTypes as $mimeType => $encoderClass) {
+            if (\preg_match(\sprintf('#%s#i', $mimeType), $requestMimeType)) {
+                return $encoderClass;
+            }
+        }
+
+        return null;
     }
 
     /**

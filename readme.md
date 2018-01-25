@@ -34,6 +34,18 @@ constructor as following:
 - **$headers (array):** headers of response, default as empty array
 
 ## Configuration
+The philosophy of the package is to map encoders to a list of MIME types that they can handle through an array 
+as following:
+
+```php
+$formats = [
+    <RequestEncoderInterface> => [<mime_type>, <mime_type>, ...]
+];
+```
+
+Each MIME type can be the exact name as `application/json` or a [Regex](http://php.net/manual/en/reference.pcre.pattern.syntax.php)
+used to match multiple MIME types as `application/vnd.eoneopay.v[0-9]+\+json`.
+
 #### Laravel
 To configure supported formats in your application, create a `api-formats.php` config file with a `formats`
 array using the encoders class as key and array of associated Mime types as value:
@@ -44,7 +56,7 @@ array using the encoders class as key and array of associated Mime types as valu
 return [
     'formats' => [
         JsonRequestEncoder::class => ['application/json'],
-        XmlRequestEncoder::class => ['application/xml', 'text/xml'],
+        XmlRequestEncoder::class => ['(application|text)/xml'],
         YourCustomerEncoder::class => ['you-custom-mime-type']
     ]
 ]; 

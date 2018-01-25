@@ -7,6 +7,8 @@ use EoneoPay\ApiFormats\Exceptions\InvalidEncoderException;
 use EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException;
 use EoneoPay\ApiFormats\RequestEncoderGuesser;
 use EoneoPay\ApiFormats\RequestEncoders\JsonRequestEncoder;
+use EoneoPay\ApiFormats\RequestEncoders\XmlRequestEncoder;
+use PHPUnit\Util\Xml;
 use Tests\EoneoPay\ApiFormats\Stubs\EncoderWithoutInterface;
 use Tests\EoneoPay\ApiFormats\TestCases\RequestEncoderGuesserTestCase;
 
@@ -66,5 +68,44 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
         $this->expectException(InvalidSupportedRequestFormatsConfigException::class);
 
         new RequestEncoderGuesser([['application/json']]);
+    }
+
+    /**
+     * Guesser should guess encoder based on regex.
+     */
+    public function testEncoderGuessedUsingRegex(): void
+    {
+        $formats = [
+            JsonRequestEncoder::class => [
+                'application/json',
+                'application/vnd.eoneopay.v[0-9]+\+json'
+            ],
+            XmlRequestEncoder::class => [
+                '(application|text)/xml'
+            ]
+        ];
+
+        $tests = [
+            JsonRequestEncoder::class => [
+                'application/json',
+                'application/vnd.eoneopay.v1+json',
+                'application/vnd.eoneopay.v2+json',
+                'application/vnd.eoneopay.v3+json',
+                'application/vnd.eoneopay.v31+json'
+            ],
+            XmlRequestEncoder::class => [
+                'application/xml',
+                'text/xml'
+            ]
+        ];
+
+        $guesser = new RequestEncoderGuesser($formats);
+
+        foreach ($tests as $encoderClass => $mimeTypes) {
+            /** @var array $mimeTypes */
+            foreach ($mimeTypes as $mimeType) {
+                self::assertInstanceOf($encoderClass, $guesser->guessEncoder($this->getRequest($mimeType)));
+            }
+        }
     }
 }

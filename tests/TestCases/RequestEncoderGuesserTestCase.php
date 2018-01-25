@@ -11,10 +11,12 @@ class RequestEncoderGuesserTestCase extends TestCase
     /**
      * Get server request.
      *
+     * @param string|null $accept
+     *
      * @return \Zend\Diactoros\ServerRequest
      */
-    protected function getRequest(): ServerRequest
+    protected function getRequest(string $accept = null): ServerRequest
     {
-        return new ServerRequest([], [], null, null, 'php://input', ['accept' => 'application/json']);
+        return new ServerRequest([], [], null, null, 'php://input', ['accept' => $accept ?? 'application/json']);
     }
 }

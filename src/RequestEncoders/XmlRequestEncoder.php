@@ -38,7 +38,7 @@ class XmlRequestEncoder extends AbstractRequestEncoder
      */
     public function decode(): array
     {
-        return $this->xmlConverter->xmlToArray($this->request->getBody()->getContents());
+        return $this->xmlConverter->xmlToArray($this->request->getBody()->getContents()) ?? [];
     }
 
     /**
@@ -56,7 +56,7 @@ class XmlRequestEncoder extends AbstractRequestEncoder
      */
     public function encode(array $data, int $statusCode = null, array $headers = null): ResponseInterface
     {
-        return $this->response($this->xmlConverter->arrayToXml($data), $statusCode, $headers);
+        return $this->response($this->xmlConverter->arrayToXml($data) ?? '', $statusCode, $headers);
     }
 
     /**
