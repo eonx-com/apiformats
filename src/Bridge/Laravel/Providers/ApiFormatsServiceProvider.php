@@ -33,8 +33,6 @@ class ApiFormatsServiceProvider extends ServiceProvider implements ApiFormatsSer
     {
         // Merge config to have default values if not set
         $this->mergeConfigFrom(self::CONFIG_PATH, 'api-formats');
-        // Load config from config file if created
-        $this->app->configure('api-formats');
 
         $this->app->singleton(RequestEncoderGuesserInterface::class, $this->getRequestEncoderGuesserClosure());
         $this->app->bind(Psr7FactoryInterface::class, Psr7Factory::class);
