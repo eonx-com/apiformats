@@ -5,6 +5,7 @@ namespace EoneoPay\ApiFormats\Bridge\Laravel\Middlewares;
 
 use Closure;
 use EoneoPay\ApiFormats\Bridge\Laravel\Interfaces\ApiFormatsMiddlewareInterface;
+use EoneoPay\ApiFormats\Bridge\Laravel\Traits\LaravelResponseTrait;
 use EoneoPay\ApiFormats\External\Interfaces\Psr7FactoryInterface;
 use EoneoPay\ApiFormats\Interfaces\FormattedApiResponseInterface;
 use EoneoPay\ApiFormats\Interfaces\RequestEncoderGuesserInterface;
@@ -15,15 +16,12 @@ use Psr\Http\Message\ResponseInterface;
 
 class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
 {
+    use LaravelResponseTrait;
+
     /**
      * @var RequestEncoderGuesserInterface
      */
     private $encoderGuesser;
-
-    /**
-     * @var Psr7FactoryInterface
-     */
-    private $psr7Factory;
 
     /**
      * ApiFormatsMiddleware constructor.
@@ -45,6 +43,7 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
      *
      * @return mixed
      *
+     * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
      * @throws \Exception
      * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
      * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
@@ -78,25 +77,5 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
         }
 
         return $this->laravelResponse($encoder->encode((array) $response));
-    }
-
-    /**
-     * Create Laravel response from PSR-7 response.
-     *
-     * @param \Psr\Http\Message\ResponseInterface $response
-     *
-     * @return \Illuminate\Http\Response
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess) Laravel way to create response
-     */
-    private function laravelResponse(ResponseInterface $response): Response
-    {
-        $symfonyResponse = $this->psr7Factory->createResponse($response);
-
-        return Response::create(
-            $symfonyResponse->getContent(),
-            $symfonyResponse->getStatusCode(),
-            $symfonyResponse->headers->all()
-        );
     }
 }
