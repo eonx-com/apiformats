@@ -29,19 +29,6 @@ class XmlRequestEncoder extends AbstractRequestEncoder
     }
 
     /**
-     * Decode request content to array.
-     *
-     * @return array
-     *
-     * @throws \RuntimeException
-     * @throws \EoneoPay\Utils\Exceptions\InvalidXmlException
-     */
-    public function decode(): array
-    {
-        return $this->xmlConverter->xmlToArray($this->request->getBody()->getContents()) ?? [];
-    }
-
-    /**
      * Create response from given data, status code and headers.
      *
      * @param array $data
@@ -57,6 +44,18 @@ class XmlRequestEncoder extends AbstractRequestEncoder
     public function encode(array $data, int $statusCode = null, array $headers = null): ResponseInterface
     {
         return $this->response($this->xmlConverter->arrayToXml($data) ?? '', $statusCode, $headers);
+    }
+
+    /**
+     * Decode request content to array.
+     *
+     * @param string $content
+     *
+     * @return array
+     */
+    protected function decodeRequestContent(string $content): array
+    {
+        return $this->xmlConverter->xmlToArray($content) ?? [];
     }
 
     /**

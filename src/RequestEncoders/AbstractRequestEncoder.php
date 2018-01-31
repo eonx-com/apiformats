@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace EoneoPay\ApiFormats\RequestEncoders;
 
@@ -25,6 +25,34 @@ abstract class AbstractRequestEncoder implements RequestEncoderInterface
     {
         $this->request = $request;
     }
+
+    /**
+     * Decode request content to array.
+     *
+     * @return array
+     *
+     * @throws \RuntimeException
+     * @throws \EoneoPay\Utils\Exceptions\InvalidXmlException
+     */
+    public function decode(): array
+    {
+        $content = $this->request->getBody()->getContents();
+
+        if ('' === $content) {
+            return [];
+        }
+
+        return $this->decodeRequestContent($content);
+    }
+
+    /**
+     * Decode request content to array.
+     *
+     * @param string $content
+     *
+     * @return array
+     */
+    abstract protected function decodeRequestContent(string $content): array;
 
     /**
      * Returns HTTP Content-Type header value.

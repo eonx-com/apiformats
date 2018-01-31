@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace EoneoPay\ApiFormats\RequestEncoders;
 
@@ -7,19 +7,6 @@ use Psr\Http\Message\ResponseInterface;
 
 class JsonRequestEncoder extends AbstractRequestEncoder
 {
-    /**
-     * Decode request content to array.
-     *
-     * @return array
-     *
-     * @throws \RuntimeException
-     * @throws \LogicException
-     */
-    public function decode(): array
-    {
-        return \json_decode($this->request->getBody()->getContents(), true) ?? [];
-    }
-
     /**
      * Create response from given data, status code and headers.
      *
@@ -35,6 +22,18 @@ class JsonRequestEncoder extends AbstractRequestEncoder
     public function encode(array $data, int $statusCode = null, array $headers = null): ResponseInterface
     {
         return $this->response(\json_encode($data), $statusCode, $headers);
+    }
+
+    /**
+     * Decode request content to array.
+     *
+     * @param string $content
+     *
+     * @return array
+     */
+    protected function decodeRequestContent(string $content): array
+    {
+        return \json_decode($content, true) ?? [];
     }
 
     /**
