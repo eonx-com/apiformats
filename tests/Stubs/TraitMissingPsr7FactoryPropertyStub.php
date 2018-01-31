@@ -17,6 +17,6 @@ class TraitMissingPsr7FactoryPropertyStub
      */
     public function processTest(): void
     {
-        $this->laravelResponse(new Response());
+        $this->createLaravelResponseFromPsr(new Response());
     }
 }

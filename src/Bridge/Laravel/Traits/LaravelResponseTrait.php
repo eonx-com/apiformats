@@ -26,7 +26,7 @@ trait LaravelResponseTrait
      *
      * @SuppressWarnings(PHPMD.StaticAccess) Laravel way to create response
      */
-    private function laravelResponse(ResponseInterface $response): Response
+    private function createLaravelResponseFromPsr(ResponseInterface $response): Response
     {
         if (!$this->psr7Factory instanceof Psr7FactoryInterface) {
             throw new InvalidPsr7FactoryException(\sprintf(

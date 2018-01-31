@@ -12,7 +12,6 @@ use EoneoPay\ApiFormats\Interfaces\RequestEncoderGuesserInterface;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Psr\Http\Message\ResponseInterface;
 
 class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
 {
@@ -65,7 +64,7 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
         $response = $next($request);
 
         if ($response instanceof FormattedApiResponseInterface) {
-            return $this->laravelResponse($encoder->encode(
+            return $this->createLaravelResponseFromPsr($encoder->encode(
                 (array) $response->getContent(),
                 $response->getStatusCode(),
                 $response->getHeaders()
@@ -76,6 +75,6 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
             return $response;
         }
 
-        return $this->laravelResponse($encoder->encode((array) $response));
+        return $this->createLaravelResponseFromPsr($encoder->encode((array) $response));
     }
 }
