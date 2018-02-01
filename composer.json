@@ -12,6 +12,7 @@
     "eoneopay/utils": "dev-master"
   },
   "require-dev": {
+    "laravel/lumen-framework": "^5.5",
     "illuminate/http": "^5.5",
     "phpunit/phpunit": "^6.5",
     "illuminate/support": "^5.5"
@@ -33,6 +34,6 @@
     }
   ],
   "optimize-autoloader": true,
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "prefer-stable": true
 }

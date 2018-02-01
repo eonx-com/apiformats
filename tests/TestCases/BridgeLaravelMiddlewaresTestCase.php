@@ -6,7 +6,7 @@ namespace Tests\EoneoPay\ApiFormats\TestCases;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\TestCase;
 
-class BridgeLaravelMiddlewaresTestCase extends TestCase
+abstract class BridgeLaravelMiddlewaresTestCase extends TestCase
 {
     /**
      * Get request instance.

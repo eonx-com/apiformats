@@ -6,7 +6,7 @@ namespace Tests\EoneoPay\ApiFormats\TestCases;
 use PHPUnit\Framework\TestCase;
 use Zend\Diactoros\ServerRequest;
 
-class RequestEncoderGuesserTestCase extends TestCase
+abstract class RequestEncoderGuesserTestCase extends TestCase
 {
     /**
      * Get server request.

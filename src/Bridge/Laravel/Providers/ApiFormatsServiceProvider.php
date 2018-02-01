@@ -12,7 +12,7 @@ use Illuminate\Support\ServiceProvider;
 
 class ApiFormatsServiceProvider extends ServiceProvider implements ApiFormatsServiceProviderInterface
 {
-    private const CONFIG_PATH = __DIR__ . '/../config/api-formats.php';
+    public const CONFIG_PATH = __DIR__ . '/../config/api-formats.php';
 
     /**
      * Boot api formats services.

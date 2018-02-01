@@ -12,6 +12,7 @@ use EoneoPay\ApiFormats\RequestEncoders\JsonRequestEncoder;
 use EoneoPay\ApiFormats\RequestEncoders\XmlRequestEncoder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Tests\EoneoPay\ApiFormats\Stubs\SerializableInterfaceStub;
 use Tests\EoneoPay\ApiFormats\TestCases\BridgeLaravelMiddlewaresTestCase;
 
 class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
@@ -96,7 +97,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
 
     /**
      * Middleware should return laravel response with right information if closure result is
-     * formatter api response.
+     * formatted api response.
      */
     public function testReturnRightFormattedResponseIfFormattedApiResponse(): void
     {
@@ -105,6 +106,33 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
         $request = $this->getRequest();
         $formattedApiResponse = new FormattedApiResponse(
             ['email' => 'email@eoneopay.com.au'],
+            201,
+            ['X-CUSTOM-HEADER' => 'custom']
+        );
+
+        $next = function (Request $request) use ($formattedApiResponse) {
+            return $formattedApiResponse;
+        };
+
+        $response = (new ApiFormatsMiddleware($encoderGuesser, $psr7Factory))->handle($request, $next);
+
+        self::assertEquals(\json_encode($formattedApiResponse->getContent()), $response->getContent());
+        self::assertEquals($formattedApiResponse->getStatusCode(), $response->getStatusCode());
+        self::assertTrue($response->headers->has('X-CUSTOM-HEADER'));
+        self::assertEquals('custom', $response->headers->get('X-CUSTOM-HEADER'));
+    }
+
+    /**
+     * Middleware should return laravel response with right information if closure result is
+     * formatted api response with serializable interface as content.
+     */
+    public function testReturnRightFormattedResponseIfFormattedApiResponseWithSerializableInterface(): void
+    {
+        $psr7Factory = new Psr7Factory();
+        $encoderGuesser = new RequestEncoderGuesser([JsonRequestEncoder::class => ['application/json']]);
+        $request = $this->getRequest();
+        $formattedApiResponse = new FormattedApiResponse(
+            new SerializableInterfaceStub(),
             201,
             ['X-CUSTOM-HEADER' => 'custom']
         );

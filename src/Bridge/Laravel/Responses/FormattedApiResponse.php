@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace EoneoPay\ApiFormats\Bridge\Laravel\Responses;
 
 use EoneoPay\ApiFormats\Interfaces\FormattedApiResponseInterface;
+use EoneoPay\Utils\Interfaces\SerializableInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -23,6 +24,10 @@ class FormattedApiResponse extends Response implements FormattedApiResponseInter
     public function __construct($content, int $statusCode = null, array $headers = null)
     {
         parent::__construct();
+
+        if ($content instanceof SerializableInterface) {
+            $content = $content->toArray();
+        }
 
         $this->content = $content;
         $this->statusCode = $statusCode ?? 200;
