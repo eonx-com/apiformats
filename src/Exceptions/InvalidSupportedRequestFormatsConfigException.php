@@ -3,6 +3,10 @@ declare(strict_types = 1);
 
 namespace EoneoPay\ApiFormats\Exceptions;
 
-class InvalidSupportedRequestFormatsConfigException extends AbstractApiFormatsException
+use EoneoPay\ApiFormats\Interfaces\ApiFormatsExceptionInterface;
+use EoneoPay\Utils\Exceptions\CriticalException;
+
+class InvalidSupportedRequestFormatsConfigException extends CriticalException implements ApiFormatsExceptionInterface
 {
+    //
 }
