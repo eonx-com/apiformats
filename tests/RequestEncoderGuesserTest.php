@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\EoneoPay\ApiFormats;
 
+use EoneoPay\ApiFormats\Exceptions\DecodeNullRequestException;
 use EoneoPay\ApiFormats\Exceptions\InvalidEncoderException;
 use EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException;
 use EoneoPay\ApiFormats\RequestEncoderGuesser;
@@ -68,6 +69,16 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
         $this->expectException(InvalidSupportedRequestFormatsConfigException::class);
 
         new RequestEncoderGuesser([['application/json']]);
+    }
+
+    /**
+     * Encoder should throw exception when trying to decode on null request.
+     */
+    public function testDecodeNullRequestException(): void
+    {
+        $this->expectException(DecodeNullRequestException::class);
+
+        (new RequestEncoderGuesser([JsonRequestEncoder::class => ['application/json']]))->defaultEncoder()->decode();
     }
 
     /**

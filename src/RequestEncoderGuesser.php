@@ -47,11 +47,11 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
     /**
      * Get default encoder when formats configuration invalid.
      *
-     * @param ServerRequestInterface $request
+     * @param null|ServerRequestInterface $request
      *
      * @return RequestEncoderInterface
      */
-    public function defaultEncoder(ServerRequestInterface $request): RequestEncoderInterface
+    public function defaultEncoder(?ServerRequestInterface $request = null): RequestEncoderInterface
     {
         return new JsonRequestEncoder($request);
     }

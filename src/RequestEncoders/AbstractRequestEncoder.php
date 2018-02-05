@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace EoneoPay\ApiFormats\RequestEncoders;
 
+use EoneoPay\ApiFormats\Exceptions\DecodeNullRequestException;
 use EoneoPay\ApiFormats\Interfaces\RequestEncoderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -12,16 +13,16 @@ use Zend\Diactoros\Stream;
 abstract class AbstractRequestEncoder implements RequestEncoderInterface
 {
     /**
-     * @var ServerRequestInterface
+     * @var null|ServerRequestInterface
      */
     protected $request;
 
     /**
      * AbstractRequestEncoder constructor.
      *
-     * @param ServerRequestInterface $request
+     * @param null|ServerRequestInterface $request
      */
-    public function __construct(ServerRequestInterface $request)
+    public function __construct(?ServerRequestInterface $request = null)
     {
         $this->request = $request;
     }
@@ -31,11 +32,16 @@ abstract class AbstractRequestEncoder implements RequestEncoderInterface
      *
      * @return array
      *
+     * @throws \EoneoPay\ApiFormats\Exceptions\DecodeNullRequestException
      * @throws \RuntimeException
      * @throws \EoneoPay\Utils\Exceptions\InvalidXmlException
      */
     public function decode(): array
     {
+        if (null === $this->request) {
+            throw new DecodeNullRequestException('Request must be set to decode content');
+        }
+
         $content = $this->request->getBody()->getContents();
 
         if ('' === $content) {
