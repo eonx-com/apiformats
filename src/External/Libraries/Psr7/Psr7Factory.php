@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace EoneoPay\ApiFormats\External\Libraries;
+namespace EoneoPay\ApiFormats\External\Libraries\Psr7;
 
-use EoneoPay\ApiFormats\External\Interfaces\Psr7FactoryInterface;
+use EoneoPay\ApiFormats\External\Interfaces\Psr7\Psr7FactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;

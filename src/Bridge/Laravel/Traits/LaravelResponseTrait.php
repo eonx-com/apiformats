@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace EoneoPay\ApiFormats\Bridge\Laravel\Traits;
 
 use EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException;
-use EoneoPay\ApiFormats\External\Interfaces\Psr7FactoryInterface;
+use EoneoPay\ApiFormats\External\Interfaces\Psr7\Psr7FactoryInterface;
 use Illuminate\Http\Response;
 use Psr\Http\Message\ResponseInterface;
 

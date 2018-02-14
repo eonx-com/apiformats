@@ -26,7 +26,7 @@ class SerializableInterfaceStub implements SerializableInterface
      */
     public function toArray(): array
     {
-        return ['email' => 'email@eoneopay.com.au'];
+        return ['id' => 'my-id', 'email' => 'email@eoneopay.com.au'];
     }
 
     /**
@@ -50,6 +50,6 @@ class SerializableInterfaceStub implements SerializableInterface
     {
         $rootNode = $rootNode ?? 'data';
 
-        return \sprintf('<%s><email>email@eoneopay.com,au</email></%s>', $rootNode, $rootNode);
+        return \sprintf('<%s><email>email@eoneopay.com.au</email></%s>', $rootNode, $rootNode);
     }
 }

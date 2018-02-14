@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace EoneoPay\ApiFormats\External\Interfaces;
+namespace EoneoPay\ApiFormats\External\Interfaces\Psr7;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

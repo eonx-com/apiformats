@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace EoneoPay\ApiFormats\RequestEncoders;
 
+use EoneoPay\Utils\Interfaces\SerializableInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class JsonRequestEncoder extends AbstractRequestEncoder
@@ -10,7 +11,7 @@ class JsonRequestEncoder extends AbstractRequestEncoder
     /**
      * Create response from given data, status code and headers.
      *
-     * @param array $data
+     * @param mixed $data
      * @param int|null $statusCode
      * @param array|null $headers
      *
@@ -19,9 +20,13 @@ class JsonRequestEncoder extends AbstractRequestEncoder
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      */
-    public function encode(array $data, int $statusCode = null, array $headers = null): ResponseInterface
+    public function encode($data, ?int $statusCode = null, ?array $headers = null): ResponseInterface
     {
-        return $this->response(\json_encode($data), $statusCode, $headers);
+        if ($data instanceof SerializableInterface) {
+            $data = $data->toArray();
+        }
+
+        return $this->response(\json_encode((array) $data), $statusCode, $headers);
     }
 
     /**

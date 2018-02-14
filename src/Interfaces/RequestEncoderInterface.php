@@ -10,13 +10,13 @@ interface RequestEncoderInterface
     /**
      * Create response from given data, status code and headers.
      *
-     * @param array      $data
-     * @param int|null   $statusCode
+     * @param mixed $data
+     * @param int|null $statusCode
      * @param array|null $headers
      *
      * @return ResponseInterface
      */
-    public function encode(array $data, int $statusCode = null, array $headers = null): ResponseInterface;
+    public function encode($data, ?int $statusCode = null, ?array $headers = null): ResponseInterface;
 
     /**
      * Decode request content to array.
@@ -24,4 +24,13 @@ interface RequestEncoderInterface
      * @return array
      */
     public function decode(): array;
+
+    /**
+     * Manually set content to decode.
+     *
+     * @param string $content
+     *
+     * @return \EoneoPay\ApiFormats\Interfaces\RequestEncoderInterface
+     */
+    public function setContent(string $content): self;
 }

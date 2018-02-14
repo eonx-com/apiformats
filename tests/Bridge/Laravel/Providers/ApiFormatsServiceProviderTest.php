@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Tests\EoneoPay\ApiFormats\Bridge\Laravel\Providers;
 
 use EoneoPay\ApiFormats\Bridge\Laravel\Providers\ApiFormatsServiceProvider;
-use EoneoPay\ApiFormats\External\Interfaces\Psr7FactoryInterface;
-use EoneoPay\ApiFormats\External\Libraries\Psr7Factory;
+use EoneoPay\ApiFormats\External\Interfaces\Psr7\Psr7FactoryInterface;
+use EoneoPay\ApiFormats\External\Libraries\Psr7\Psr7Factory;
 use EoneoPay\ApiFormats\Interfaces\RequestEncoderGuesserInterface;
 use EoneoPay\ApiFormats\RequestEncoderGuesser;
 use Laravel\Lumen\Application;

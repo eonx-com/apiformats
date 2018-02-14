@@ -25,10 +25,6 @@ class FormattedApiResponse extends Response implements FormattedApiResponseInter
     {
         parent::__construct();
 
-        if ($content instanceof SerializableInterface) {
-            $content = $content->toArray();
-        }
-
         $this->content = $content;
         $this->statusCode = $statusCode ?? 200;
         $this->headers = $headers ?? [];

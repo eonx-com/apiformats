@@ -7,6 +7,7 @@ use EoneoPay\ApiFormats\Exceptions\DecodeNullRequestException;
 use EoneoPay\ApiFormats\Exceptions\InvalidEncoderException;
 use EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException;
 use EoneoPay\ApiFormats\RequestEncoderGuesser;
+use EoneoPay\ApiFormats\RequestEncoders\JsonApiRequestEncoder;
 use EoneoPay\ApiFormats\RequestEncoders\JsonRequestEncoder;
 use EoneoPay\ApiFormats\RequestEncoders\XmlRequestEncoder;
 use PHPUnit\Util\Xml;
@@ -93,6 +94,10 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
             ],
             XmlRequestEncoder::class => [
                 '(application|text)/xml'
+            ],
+            JsonApiRequestEncoder::class => [
+                'application/vnd.api\+json',
+                'application/vnd.eoneopay.v[0-9]+.api\+json'
             ]
         ];
 
@@ -107,6 +112,13 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
             XmlRequestEncoder::class => [
                 'application/xml',
                 'text/xml'
+            ],
+            JsonApiRequestEncoder::class => [
+                'application/vnd.api+json',
+                'application/vnd.eoneopay.v1.api+json',
+                'application/vnd.eoneopay.v2.api+json',
+                'application/vnd.eoneopay.v3.api+json',
+                'application/vnd.eoneopay.v31.api+json'
             ]
         ];
 

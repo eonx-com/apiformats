@@ -74,12 +74,12 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
             $header = $request->getHeader($headerName);
 
             // Skip if header not set
-            if (empty($header) || '*/*' === reset($header)) {
+            if (empty($header) || '*/*' === \reset($header)) {
                 continue;
             }
 
             // Retrieve MIME type from request header
-            $mimeType = (string) reset($header);
+            $mimeType = (string) \reset($header);
             // Get encoder class to use
             $encoderClass = $this->getEncoderClass($mimeType);
 

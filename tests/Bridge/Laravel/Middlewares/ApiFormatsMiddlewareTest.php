@@ -6,7 +6,7 @@ namespace Tests\EoneoPay\ApiFormats\Bridge\Laravel\Middlewares;
 use EoneoPay\ApiFormats\Bridge\Laravel\Middlewares\ApiFormatsMiddleware;
 use EoneoPay\ApiFormats\Bridge\Laravel\Responses\FormattedApiResponse;
 use EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException;
-use EoneoPay\ApiFormats\External\Libraries\Psr7Factory;
+use EoneoPay\ApiFormats\External\Libraries\Psr7\Psr7Factory;
 use EoneoPay\ApiFormats\RequestEncoderGuesser;
 use EoneoPay\ApiFormats\RequestEncoders\JsonRequestEncoder;
 use EoneoPay\ApiFormats\RequestEncoders\XmlRequestEncoder;
