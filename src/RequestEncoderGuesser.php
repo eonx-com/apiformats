@@ -21,10 +21,12 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
     /**
      * @var array
      */
-    private static $headers = [
-        'accept',
-        'content-type'
-    ];
+    private $formats;
+
+    /**
+     * @var array
+     */
+    private static $headers = ['accept', 'content-type'];
 
     /**
      * @var array
@@ -35,13 +37,10 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
      * RequestFormatGuesser constructor.
      *
      * @param array $formats
-     *
-     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      */
     public function __construct(array $formats)
     {
-        $this->validateFormats($formats);
-        $this->setMimeTypes($formats);
+        $this->formats = $formats;
     }
 
     /**
@@ -69,6 +68,9 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
      */
     public function guessEncoder(ServerRequestInterface $request): RequestEncoderInterface
     {
+        $this->validateFormats($this->formats);
+        $this->setMimeTypes($this->formats);
+
         // Try to guess using headers
         foreach (static::$headers as $headerName) {
             $header = $request->getHeader($headerName);
