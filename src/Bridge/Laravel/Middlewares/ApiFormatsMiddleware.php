@@ -64,8 +64,6 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
 
         $response = $next($request);
 
-        \var_dump($response);
-
         if ($response instanceof FormattedApiResponseInterface) {
             return $this->createLaravelResponseFromPsr($encoder->encode(
                 $response->getContent(),
