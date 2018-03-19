@@ -12,6 +12,7 @@ use EoneoPay\ApiFormats\Interfaces\RequestEncoderGuesserInterface;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
 {
@@ -59,9 +60,11 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
         }
 
         $request->attributes->set('_encoder', $encoder);
-        $request->replace($encoder->decode());
+        $request->request = new ParameterBag($encoder->decode());
 
         $response = $next($request);
+
+        \var_dump($response);
 
         if ($response instanceof FormattedApiResponseInterface) {
             return $this->createLaravelResponseFromPsr($encoder->encode(

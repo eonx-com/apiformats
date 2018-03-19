@@ -26,6 +26,8 @@ abstract class BridgeLaravelMiddlewaresTestCase extends TestCase
             $request->headers->set($header, $value);
         }
 
+        $request->setMethod(Request::METHOD_POST);
+
         return $request;
     }
 }

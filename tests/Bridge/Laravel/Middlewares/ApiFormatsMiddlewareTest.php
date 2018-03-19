@@ -19,6 +19,13 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
 {
     /**
      * Middleware should set default encoder on request if exception thrown wile guessing encoder.
+     *
+     * @return void
+     *
+     * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
+     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
+     * @throws \Exception
      */
     public function testDefaultEncoderOnRequestIfException(): void
     {
@@ -37,6 +44,13 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
     /**
      * Middleware should set the right encoder on the request, replace inputs on the request and return
      * an Laravel response.
+     *
+     * @return void
+     *
+     * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
+     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
+     * @throws \Exception
      */
     public function testHandleFormatsProperly(): void
     {
@@ -78,6 +92,13 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
 
     /**
      * Middleware should return directly response if closure result is a laravel response.
+     *
+     * @return void
+     *
+     * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
+     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
+     * @throws \Exception
      */
     public function testReturnDirectlyResponseIfAlreadyLaravelOne(): void
     {
@@ -98,6 +119,13 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
     /**
      * Middleware should return laravel response with right information if closure result is
      * formatted api response.
+     *
+     * @return void
+     *
+     * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
+     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
+     * @throws \Exception
      */
     public function testReturnRightFormattedResponseIfFormattedApiResponse(): void
     {
@@ -125,6 +153,13 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
     /**
      * Middleware should return laravel response with right information if closure result is
      * formatted api response with serializable interface as content.
+     *
+     * @return void
+     *
+     * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
+     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
+     * @throws \Exception
      */
     public function testReturnRightFormattedResponseIfFormattedApiResponseWithSerializableInterface(): void
     {
