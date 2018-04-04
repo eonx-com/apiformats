@@ -25,17 +25,15 @@
     "illuminate/support": "To use Laravel service provider"
   },
   "autoload": {
-    "psr-4": { "EoneoPay\\ApiFormats\\": "src/" }
+    "psr-4": { 
+      "EoneoPay\\ApiFormats\\": "src/" 
+    }
   },
   "autoload-dev": {
-    "psr-4": { "Tests\\EoneoPay\\ApiFormats\\": "tests/" }
-  },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://git@bitbucket.org/eoneopay/utils.git"
+    "psr-4": { 
+      "Tests\\EoneoPay\\ApiFormats\\": "tests/" 
     }
-  ],
+  },
   "provide": {
     "php-http/client-implementation": "1.0"
   },
