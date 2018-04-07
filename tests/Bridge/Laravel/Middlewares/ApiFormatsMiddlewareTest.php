@@ -15,6 +15,9 @@ use Illuminate\Http\Response;
 use Tests\EoneoPay\ApiFormats\Stubs\SerializableInterfaceStub;
 use Tests\EoneoPay\ApiFormats\TestCases\BridgeLaravelMiddlewaresTestCase;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects) High coupling required due to different formats
+ */
 class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
 {
     /**

@@ -27,7 +27,7 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
      * ApiFormatsMiddleware constructor.
      *
      * @param \EoneoPay\ApiFormats\Interfaces\RequestEncoderGuesserInterface $encoderGuesser
-     * @param \EoneoPay\ApiFormats\External\Interfaces\Psr7FactoryInterface $psr7Factory
+     * @param \EoneoPay\ApiFormats\External\Interfaces\Psr7\Psr7FactoryInterface $psr7Factory
      */
     public function __construct(RequestEncoderGuesserInterface $encoderGuesser, Psr7FactoryInterface $psr7Factory)
     {
@@ -45,8 +45,6 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
      *
      * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
      * @throws \Exception
-     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
-     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      */
     public function handle(Request $request, Closure $next)
     {

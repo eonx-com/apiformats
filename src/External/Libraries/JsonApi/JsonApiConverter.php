@@ -30,6 +30,8 @@ class JsonApiConverter implements JsonApiConverterInterface
      * @param string $jsonApi
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess) Third party Document::createFromArray requires static access
      */
     public function jsonApiToArray(string $jsonApi): array
     {

@@ -147,7 +147,8 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
     {
         $this->expectException(InvalidSupportedRequestFormatsConfigException::class);
 
-        (new RequestEncoderGuesser([JsonRequestEncoder::class => 'application/json']))->guessEncoder($this->getRequest());
+        (new RequestEncoderGuesser([JsonRequestEncoder::class => 'application/json']))
+            ->guessEncoder($this->getRequest());
     }
 
     /**

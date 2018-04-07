@@ -14,6 +14,9 @@ use League\Fractal\Serializer\JsonApiSerializer;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects) High coupling required due to fractal
+ */
 class JsonApiRequestEncoder extends AbstractRequestEncoder
 {
     /**
@@ -33,8 +36,11 @@ class JsonApiRequestEncoder extends AbstractRequestEncoder
      * @param \League\Fractal\Manager|null $fractal
      * @param \EoneoPay\ApiFormats\External\Interfaces\JsonApi\JsonApiConverterInterface|null $jsonApiConverter
      */
-    public function __construct(?ServerRequestInterface $request = null, ?Manager $fractal = null, ?JsonApiConverterInterface $jsonApiConverter = null)
-    {
+    public function __construct(
+        ?ServerRequestInterface $request = null,
+        ?Manager $fractal = null,
+        ?JsonApiConverterInterface $jsonApiConverter = null
+    ) {
         parent::__construct($request);
 
         $this->fractal = $fractal ?? new Manager();
@@ -121,7 +127,7 @@ class JsonApiRequestEncoder extends AbstractRequestEncoder
             return Item::class;
         }
 
-        $data = (array) $data;
+        $data = (array)$data;
         if ($this->isCollection($data)) {
             return Collection::class;
         }
@@ -151,7 +157,7 @@ class JsonApiRequestEncoder extends AbstractRequestEncoder
                 return $data->toArray();
             }
 
-            return (array) $data;
+            return (array)$data;
         };
     }
 
@@ -165,7 +171,8 @@ class JsonApiRequestEncoder extends AbstractRequestEncoder
     private function isEmpty($data): bool
     {
         // Empty array or object to array is empty
-        return (\is_array($data) && empty($data)) || ($data instanceof SerializableInterface && empty($data->toArray()));
+        return (\is_array($data) && empty($data)) ||
+            ($data instanceof SerializableInterface && empty($data->toArray()));
     }
 
     /**

@@ -161,6 +161,8 @@ abstract class AbstractRequestEncoder implements RequestEncoderInterface
      * @return string
      *
      * @throws \ReflectionException
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess) Third party Inflector::pluralize requires static access
      */
     private function getResourceKeyForSerializable(SerializableInterface $serializable): string
     {
