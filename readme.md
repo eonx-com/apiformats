@@ -4,7 +4,7 @@
 Use [Composer](https://getcomposer.org/) to install the package in your project:
 
 ```
-composer require eoneopay/api-formats
+composer require eoneopay/apiformats
 ```
 
 ## Formats
