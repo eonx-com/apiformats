@@ -39,9 +39,9 @@ abstract class AbstractRequestEncoder implements RequestEncoderInterface
      *
      * @return array
      *
+     * @throws \EoneoPay\Utils\Exceptions\BaseException
      * @throws \EoneoPay\ApiFormats\Exceptions\DecodeNullRequestException
      * @throws \RuntimeException
-     * @throws \EoneoPay\Utils\Exceptions\InvalidXmlException
      */
     public function decode(): array
     {
