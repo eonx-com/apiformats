@@ -1,6 +1,6 @@
 {
-  "name": "eoneopay/api-formats",
-  "description": "Api formats from EoneoPay.",
+  "name": "eoneopay/apiformats",
+  "description": "Package for working with API requests and responses in different formats",
   "keywords": [
     "api",
     "formats",
