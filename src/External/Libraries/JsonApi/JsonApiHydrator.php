@@ -46,7 +46,7 @@ class JsonApiHydrator implements JsonApiHydratorInterface
     /**
      * Hydrate primary resource.
      *
-     * @param Document $document
+     * @param \WoohooLabs\Yang\JsonApi\Schema\Document $document
      *
      * @return array
      */
@@ -60,7 +60,7 @@ class JsonApiHydrator implements JsonApiHydratorInterface
     /**
      * Hydrate primary resources.
      *
-     * @param Document $document
+     * @param \WoohooLabs\Yang\JsonApi\Schema\Document $document
      *
      * @return array
      */
@@ -84,21 +84,20 @@ class JsonApiHydrator implements JsonApiHydratorInterface
     /**
      * Hydrate resource.
      *
-     * @param ResourceObject $resource
-     * @param Document $document
+     * @param null|\WoohooLabs\Yang\JsonApi\Schema\ResourceObject $resource
+     * @param \WoohooLabs\Yang\JsonApi\Schema\Document $document
      * @param array $resourceMap
      *
      * @return array
      */
-    private function hydrateResource(ResourceObject $resource, Document $document, array &$resourceMap): array
+    private function hydrateResource(?ResourceObject $resource = null, Document $document, array &$resourceMap): array
     {
-        // Fill basic attributes of the resource
-        $result = [];
-        $result['type'] = $resource->type();
-        $result['id'] = $resource->id();
-        foreach ($resource->attributes() as $attribute => $value) {
-            $result[$attribute] = $value;
+        if (null === $resource) {
+            return [];
         }
+
+        // Fill basic attributes of the resource
+        $result = $this->hydrateResultArray($resource);
 
         //Save resource to the identity map
         $this->saveObjectToMap($result, $resourceMap);
@@ -128,6 +127,27 @@ class JsonApiHydrator implements JsonApiHydratorInterface
 
                 $result[$name][] = $object;
             }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Initiate and hydrate result array form given resource.
+     *
+     * @param \WoohooLabs\Yang\JsonApi\Schema\ResourceObject $resource
+     *
+     * @return array
+     */
+    private function hydrateResultArray(ResourceObject $resource): array
+    {
+        $result = [
+            'id' => $resource->id(),
+            'type' => $resource->type()
+        ];
+
+        foreach ($resource->attributes() as $attribute => $value) {
+            $result[$attribute] = $value;
         }
 
         return $result;

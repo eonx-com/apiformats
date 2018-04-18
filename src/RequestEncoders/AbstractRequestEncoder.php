@@ -58,12 +58,6 @@ abstract class AbstractRequestEncoder implements RequestEncoderInterface
         return $this->decodeRequestContent($content);
     }
 
-
-    public function notCheckingWhatSoever(): string
-    {
-        return $this->request->getBody()->getContents();
-    }
-
     /**
      * Manually set content to decode.
      *

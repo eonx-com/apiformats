@@ -26,7 +26,14 @@ class SerializableInterfaceStub implements SerializableInterface
      */
     public function toArray(): array
     {
-        return ['id' => 'my-id', 'email' => 'email@eoneopay.com.au'];
+        return [
+            'id' => 'my-id',
+            'email' => 'email@eoneopay.com.au',
+            'child' => [
+                'id' => 'child-id',
+                'email' => 'child-email@eoneopay.com.au'
+            ]
+        ];
     }
 
     /**

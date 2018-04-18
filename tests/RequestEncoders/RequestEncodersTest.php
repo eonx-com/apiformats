@@ -32,7 +32,7 @@ class RequestEncodersTest extends RequestEncoderGuesserTestCase
             $encoder = new $encoderClass();
 
             foreach ($this->getEncodersTests() as $test) {
-                self::assertTrue(
+                self::assertNotEmpty(
                     \is_array($encoder->setContent($encoder->encode($test)->getBody()->getContents())->decode())
                 );
             }
@@ -51,7 +51,7 @@ class RequestEncodersTest extends RequestEncoderGuesserTestCase
             $encoder = new $encoderClass($this->getRequest());
 
             foreach ($this->getEncodersTests() as $test) {
-                self::assertInstanceOf(ResponseInterface::class, $encoder->encode($test));
+                self::assertTrue(\is_subclass_of($encoder->encode($test), ResponseInterface::class));
             }
         }
     }
