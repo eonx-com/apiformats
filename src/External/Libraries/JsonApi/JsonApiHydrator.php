@@ -18,7 +18,7 @@ class JsonApiHydrator implements JsonApiHydratorInterface
      */
     public function hydrate(Document $document): array
     {
-        if ($document->hasAnyPrimaryResources() === false) {
+        if (false === $document->hasAnyPrimaryResources()) {
             return [];
         }
 
@@ -108,7 +108,7 @@ class JsonApiHydrator implements JsonApiHydratorInterface
             foreach ($relationship->resourceLinks() as $link) {
                 $object = $this->getObjectFromMap($link['type'], $link['id'], $resourceMap);
 
-                if ($object === null && $document->hasIncludedResource($link['type'], $link['id'])) {
+                if (null === $object && $document->hasIncludedResource($link['type'], $link['id'])) {
                     $relatedResource = $document->resource($link['type'], $link['id']);
 
                     if (null !== $relatedResource) {
@@ -116,7 +116,7 @@ class JsonApiHydrator implements JsonApiHydratorInterface
                     }
                 }
 
-                if ($object === null) {
+                if (null === $object) {
                     continue;
                 }
 
