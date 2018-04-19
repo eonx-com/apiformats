@@ -5,6 +5,7 @@ namespace Tests\EoneoPay\ApiFormats\RequestEncoders;
 
 use EoneoPay\ApiFormats\RequestEncoders\JsonApiRequestEncoder;
 use EoneoPay\ApiFormats\RequestEncoders\JsonRequestEncoder;
+use EoneoPay\ApiFormats\RequestEncoders\UrlEncodedDataRequestEncoder;
 use EoneoPay\ApiFormats\RequestEncoders\XmlRequestEncoder;
 use Psr\Http\Message\ResponseInterface;
 use Tests\EoneoPay\ApiFormats\TestCases\RequestEncoderGuesserTestCase;
@@ -15,9 +16,10 @@ class RequestEncodersTest extends RequestEncoderGuesserTestCase
      * @var array
      */
     private static $encoders = [
+        JsonApiRequestEncoder::class,
         JsonRequestEncoder::class,
-        XmlRequestEncoder::class,
-        JsonApiRequestEncoder::class
+        UrlEncodedDataRequestEncoder::class,
+        XmlRequestEncoder::class
     ];
 
     /**
