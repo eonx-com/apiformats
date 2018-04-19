@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-use EoneoPay\ApiFormats\RequestEncoders\JsonApiRequestEncoder;
-use EoneoPay\ApiFormats\RequestEncoders\JsonRequestEncoder;
-use EoneoPay\ApiFormats\RequestEncoders\UrlEncodedDataRequestEncoder;
-use EoneoPay\ApiFormats\RequestEncoders\XmlRequestEncoder;
+use EoneoPay\ApiFormats\Encoders\JsonApiEncoder;
+use EoneoPay\ApiFormats\Encoders\JsonEncoder;
+use EoneoPay\ApiFormats\Encoders\UrlEncodedDataEncoder;
+use EoneoPay\ApiFormats\Encoders\XmlEncoder;
 
 return [
     'formats' => [
-        JsonRequestEncoder::class => ['application/json'],
-        JsonApiRequestEncoder::class => ['application/vnd.api\+json'],
-        UrlEncodedDataRequestEncoder::class => ['application/x-www-form-urlencoded'],
-        XmlRequestEncoder::class => ['(application|text)/xml']
+        JsonEncoder::class => ['application/json'],
+        JsonApiEncoder::class => ['application/vnd.api\+json'],
+        UrlEncodedDataEncoder::class => ['application/x-www-form-urlencoded'],
+        XmlEncoder::class => ['(application|text)/xml']
     ]
 ];

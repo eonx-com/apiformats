@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace EoneoPay\ApiFormats\RequestEncoders;
+namespace EoneoPay\ApiFormats\Encoders;
 
 use EoneoPay\Utils\Interfaces\SerializableInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class UrlEncodedDataRequestEncoder extends AbstractEncoder
+class JsonEncoder extends AbstractEncoder
 {
     /**
      * Create response from given data, status code and headers.
@@ -15,7 +15,7 @@ class UrlEncodedDataRequestEncoder extends AbstractEncoder
      * @param int|null $statusCode
      * @param array|null $headers
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return ResponseInterface
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
@@ -26,7 +26,7 @@ class UrlEncodedDataRequestEncoder extends AbstractEncoder
             $data = $data->toArray();
         }
 
-        return $this->response(\rawurlencode(\http_build_query((array)$data)), $statusCode, $headers);
+        return $this->response(\json_encode((array) $data), $statusCode, $headers);
     }
 
     /**
@@ -38,9 +38,7 @@ class UrlEncodedDataRequestEncoder extends AbstractEncoder
      */
     protected function decodeRequestContent(string $content): array
     {
-        \parse_str($content, $decoded);
-
-        return \count($decoded) ? $decoded : [];
+        return \json_decode($content, true) ?? [];
     }
 
     /**
@@ -50,6 +48,6 @@ class UrlEncodedDataRequestEncoder extends AbstractEncoder
      */
     protected function getContentTypeHeader(): string
     {
-        return 'application/x-www-form-urlencoded';
+        return 'application/json';
     }
 }

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace EoneoPay\ApiFormats\RequestEncoders;
+namespace EoneoPay\ApiFormats\Encoders;
 
 use Doctrine\Common\Inflector\Inflector;
 use EoneoPay\ApiFormats\Exceptions\DecodeNullRequestException;

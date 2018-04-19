@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace EoneoPay\ApiFormats\RequestEncoders;
+namespace EoneoPay\ApiFormats\Encoders;
 
 use EoneoPay\ApiFormats\External\Interfaces\JsonApi\JsonApiConverterInterface;
 use EoneoPay\ApiFormats\External\Libraries\JsonApi\JsonApiConverter;
@@ -17,7 +17,7 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) High coupling required due to fractal
  */
-class JsonApiRequestEncoder extends AbstractEncoder
+class JsonApiEncoder extends AbstractEncoder
 {
     /**
      * @var \League\Fractal\Manager
@@ -30,7 +30,7 @@ class JsonApiRequestEncoder extends AbstractEncoder
     private $jsonApiConverter;
 
     /**
-     * JsonApiRequestEncoder constructor.
+     * JsonApiEncoder constructor.
      *
      * @param null|\Psr\Http\Message\ServerRequestInterface $request
      * @param \League\Fractal\Manager|null $fractal

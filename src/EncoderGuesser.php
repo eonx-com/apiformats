@@ -8,7 +8,7 @@ use EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
 use EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException;
 use EoneoPay\ApiFormats\Interfaces\EncoderGuesserInterface;
 use EoneoPay\ApiFormats\Interfaces\EncoderInterface;
-use EoneoPay\ApiFormats\RequestEncoders\JsonRequestEncoder;
+use EoneoPay\ApiFormats\Encoders\JsonEncoder;
 use Psr\Http\Message\ServerRequestInterface;
 
 class EncoderGuesser implements EncoderGuesserInterface
@@ -52,7 +52,7 @@ class EncoderGuesser implements EncoderGuesserInterface
      */
     public function defaultEncoder(?ServerRequestInterface $request = null): EncoderInterface
     {
-        return new JsonRequestEncoder($request);
+        return new JsonEncoder($request);
     }
 
     /**

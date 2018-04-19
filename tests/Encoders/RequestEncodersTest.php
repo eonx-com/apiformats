@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\EoneoPay\ApiFormats\RequestEncoders;
+namespace Tests\EoneoPay\ApiFormats\Encoders;
 
-use EoneoPay\ApiFormats\RequestEncoders\JsonApiRequestEncoder;
-use EoneoPay\ApiFormats\RequestEncoders\JsonRequestEncoder;
-use EoneoPay\ApiFormats\RequestEncoders\UrlEncodedDataRequestEncoder;
-use EoneoPay\ApiFormats\RequestEncoders\XmlRequestEncoder;
+use EoneoPay\ApiFormats\Encoders\JsonApiEncoder;
+use EoneoPay\ApiFormats\Encoders\JsonEncoder;
+use EoneoPay\ApiFormats\Encoders\UrlEncodedDataEncoder;
+use EoneoPay\ApiFormats\Encoders\XmlEncoder;
 use Psr\Http\Message\ResponseInterface;
 use Tests\EoneoPay\ApiFormats\TestCases\RequestEncoderGuesserTestCase;
 
@@ -16,14 +16,14 @@ class RequestEncodersTest extends RequestEncoderGuesserTestCase
      * @var array
      */
     private static $encoders = [
-        JsonApiRequestEncoder::class,
-        JsonRequestEncoder::class,
-        UrlEncodedDataRequestEncoder::class,
-        XmlRequestEncoder::class
+        JsonApiEncoder::class,
+        JsonEncoder::class,
+        UrlEncodedDataEncoder::class,
+        XmlEncoder::class
     ];
 
     /**
-     * RequestEncoders::decode should return array no matters the input.
+     * Encoders::decode should return array no matters the input.
      *
      * @return void
      */
@@ -42,7 +42,7 @@ class RequestEncodersTest extends RequestEncoderGuesserTestCase
     }
 
     /**
-     * RequestEncoders::encode should return ResponseInterface no matters the input.
+     * Encoders::encode should return ResponseInterface no matters the input.
      *
      * @return void
      */

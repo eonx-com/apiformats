@@ -8,8 +8,8 @@ use EoneoPay\ApiFormats\Bridge\Laravel\Responses\FormattedApiResponse;
 use EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException;
 use EoneoPay\ApiFormats\External\Libraries\Psr7\Psr7Factory;
 use EoneoPay\ApiFormats\EncoderGuesser;
-use EoneoPay\ApiFormats\RequestEncoders\JsonRequestEncoder;
-use EoneoPay\ApiFormats\RequestEncoders\XmlRequestEncoder;
+use EoneoPay\ApiFormats\Encoders\JsonEncoder;
+use EoneoPay\ApiFormats\Encoders\XmlEncoder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Tests\EoneoPay\ApiFormats\Stubs\SerializableInterfaceStub;
@@ -35,13 +35,13 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
         $this->expectException(UnsupportedRequestFormatException::class);
 
         $psr7Factory = new Psr7Factory();
-        $encoderGuesser = new EncoderGuesser([JsonRequestEncoder::class => ['application/json']]);
+        $encoderGuesser = new EncoderGuesser([JsonEncoder::class => ['application/json']]);
         $request = $this->getRequest(null, ['accept' => 'invalid']);
 
         (new ApiFormatsMiddleware($encoderGuesser, $psr7Factory))->handle($request, function () {
         });
 
-        self::assertInstanceOf(JsonRequestEncoder::class, $request->attributes->get('_encoder'));
+        self::assertInstanceOf(JsonEncoder::class, $request->attributes->get('_encoder'));
     }
 
     /**
@@ -58,11 +58,11 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
     public function testHandleFormatsProperly(): void
     {
         $formats = [
-            JsonRequestEncoder::class => [
+            JsonEncoder::class => [
                 'mime_type' => 'application/json',
                 'content' => '{"email":"email@eoneopay.com.au"}'
             ],
-            XmlRequestEncoder::class => [
+            XmlEncoder::class => [
                 'mime_type' => 'application/xml',
                 'content' => '<data><email>email@eoneopay.com.au</email></data>'
             ]
@@ -83,10 +83,10 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
             self::assertEquals($test['mime_type'], $response->headers->get('Content-Type'));
 
             switch ($encoder) {
-                case JsonRequestEncoder::class:
+                case JsonEncoder::class:
                     self::assertEquals($test['content'], $response->getContent());
                     break;
-                case XmlRequestEncoder::class:
+                case XmlEncoder::class:
                     self::assertXmlStringEqualsXmlString($test['content'], $response->getContent());
                     break;
             }
@@ -106,7 +106,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
     public function testReturnDirectlyResponseIfAlreadyLaravelOne(): void
     {
         $psr7Factory = new Psr7Factory();
-        $encoderGuesser = new EncoderGuesser([JsonRequestEncoder::class => ['application/json']]);
+        $encoderGuesser = new EncoderGuesser([JsonEncoder::class => ['application/json']]);
         $request = $this->getRequest();
         $laravelResponse = new Response();
 
@@ -133,7 +133,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
     public function testReturnRightFormattedResponseIfFormattedApiResponse(): void
     {
         $psr7Factory = new Psr7Factory();
-        $encoderGuesser = new EncoderGuesser([JsonRequestEncoder::class => ['application/json']]);
+        $encoderGuesser = new EncoderGuesser([JsonEncoder::class => ['application/json']]);
         $request = $this->getRequest();
         $formattedApiResponse = new FormattedApiResponse(
             ['email' => 'email@eoneopay.com.au'],
@@ -167,7 +167,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
     public function testReturnRightFormattedResponseIfFormattedApiResponseWithSerializableInterface(): void
     {
         $psr7Factory = new Psr7Factory();
-        $encoderGuesser = new EncoderGuesser([JsonRequestEncoder::class => ['application/json']]);
+        $encoderGuesser = new EncoderGuesser([JsonEncoder::class => ['application/json']]);
         $request = $this->getRequest();
         $formattedApiResponse = new FormattedApiResponse(
             new SerializableInterfaceStub(),

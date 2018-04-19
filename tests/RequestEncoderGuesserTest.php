@@ -8,9 +8,9 @@ use EoneoPay\ApiFormats\Exceptions\InvalidEncoderException;
 use EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException;
 use EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException;
 use EoneoPay\ApiFormats\EncoderGuesser;
-use EoneoPay\ApiFormats\RequestEncoders\JsonApiRequestEncoder;
-use EoneoPay\ApiFormats\RequestEncoders\JsonRequestEncoder;
-use EoneoPay\ApiFormats\RequestEncoders\XmlRequestEncoder;
+use EoneoPay\ApiFormats\Encoders\JsonApiEncoder;
+use EoneoPay\ApiFormats\Encoders\JsonEncoder;
+use EoneoPay\ApiFormats\Encoders\XmlEncoder;
 use Tests\EoneoPay\ApiFormats\Stubs\EncoderWithoutInterface;
 use Tests\EoneoPay\ApiFormats\TestCases\RequestEncoderGuesserTestCase;
 
@@ -25,7 +25,7 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
     {
         $this->expectException(DecodeNullRequestException::class);
 
-        (new EncoderGuesser([JsonRequestEncoder::class => ['application/json']]))->defaultEncoder()->decode();
+        (new EncoderGuesser([JsonEncoder::class => ['application/json']]))->defaultEncoder()->decode();
     }
 
     /**
@@ -92,32 +92,32 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
     public function testEncoderGuessedUsingRegex(): void
     {
         $formats = [
-            JsonRequestEncoder::class => [
+            JsonEncoder::class => [
                 'application/json',
                 'application/vnd.eoneopay.v[0-9]+\+json'
             ],
-            XmlRequestEncoder::class => [
+            XmlEncoder::class => [
                 '(application|text)/xml'
             ],
-            JsonApiRequestEncoder::class => [
+            JsonApiEncoder::class => [
                 'application/vnd.api\+json',
                 'application/vnd.eoneopay.v[0-9]+.api\+json'
             ]
         ];
 
         $tests = [
-            JsonRequestEncoder::class => [
+            JsonEncoder::class => [
                 'application/json',
                 'application/vnd.eoneopay.v1+json',
                 'application/vnd.eoneopay.v2+json',
                 'application/vnd.eoneopay.v3+json',
                 'application/vnd.eoneopay.v31+json'
             ],
-            XmlRequestEncoder::class => [
+            XmlEncoder::class => [
                 'application/xml',
                 'text/xml'
             ],
-            JsonApiRequestEncoder::class => [
+            JsonApiEncoder::class => [
                 'application/vnd.api+json',
                 'application/vnd.eoneopay.v1.api+json',
                 'application/vnd.eoneopay.v2.api+json',
@@ -149,17 +149,17 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
     public function testEncoderGuesserReturnsTwoDifferentEncodersBasedOnHeaders(): void
     {
         $formats = [
-            JsonRequestEncoder::class => ['application/json'],
-            XmlRequestEncoder::class => ['(application|text)/xml']
+            JsonEncoder::class => ['application/json'],
+            XmlEncoder::class => ['(application|text)/xml']
         ];
 
         $request = $this->getRequest(null, 'application/xml');
         $guesser = new EncoderGuesser($formats);
 
         /** @noinspection UnnecessaryAssertionInspection Return type hint is interface not specific class */
-        self::assertInstanceOf(XmlRequestEncoder::class, $guesser->guessRequestEncoder($request));
+        self::assertInstanceOf(XmlEncoder::class, $guesser->guessRequestEncoder($request));
         /** @noinspection UnnecessaryAssertionInspection Return type hint is interface not specific class */
-        self::assertInstanceOf(JsonRequestEncoder::class, $guesser->guessResponseEncoder($request));
+        self::assertInstanceOf(JsonEncoder::class, $guesser->guessResponseEncoder($request));
     }
 
     /**
@@ -175,7 +175,7 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
     {
         $this->expectException(InvalidSupportedRequestFormatsConfigException::class);
 
-        (new EncoderGuesser([JsonRequestEncoder::class => 'application/json']))
+        (new EncoderGuesser([JsonEncoder::class => 'application/json']))
             ->guessEncoder($this->getRequest());
     }
 

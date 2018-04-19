@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace EoneoPay\ApiFormats\RequestEncoders;
+namespace EoneoPay\ApiFormats\Encoders;
 
 use EoneoPay\Utils\Interfaces\SerializableInterface;
 use EoneoPay\Utils\Interfaces\XmlConverterInterface;
@@ -9,7 +9,7 @@ use EoneoPay\Utils\XmlConverter;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class XmlRequestEncoder extends AbstractEncoder
+class XmlEncoder extends AbstractEncoder
 {
     /**
      * @var \EoneoPay\Utils\Interfaces\XmlConverterInterface
@@ -17,7 +17,7 @@ class XmlRequestEncoder extends AbstractEncoder
     private $xmlConverter;
 
     /**
-     * XmlRequestEncoder constructor.
+     * XmlEncoder constructor.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \EoneoPay\Utils\Interfaces\XmlConverterInterface|null $xmlConverter
