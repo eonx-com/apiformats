@@ -11,18 +11,6 @@ use Zend\Diactoros\ServerRequest;
 abstract class RequestEncoderGuesserTestCase extends TestCase
 {
     /**
-     * Get server request.
-     *
-     * @param string|null $accept
-     *
-     * @return \Zend\Diactoros\ServerRequest
-     */
-    protected function getRequest(string $accept = null): ServerRequest
-    {
-        return new ServerRequest([], [], null, null, 'php://input', ['accept' => $accept ?? 'application/json']);
-    }
-
-    /**
      * Get test inputs for encoders tests.
      *
      * @return array
@@ -36,5 +24,24 @@ abstract class RequestEncoderGuesserTestCase extends TestCase
             [], // Empty response
             [new SerializableInterfaceWithGettersStub(), (new SerializableInterfaceStub())->toArray()] // Collection
         ];
+    }
+
+    /**
+     * Get server request.
+     *
+     * @param string|null $accept
+     * @param string|null $contentType
+     *
+     * @return \Zend\Diactoros\ServerRequest
+     */
+    protected function getRequest(?string $accept = null, ?string $contentType = null): ServerRequest
+    {
+        $headers = ['accept' => $accept ?? 'application/json'];
+
+        if (null !== $contentType) {
+            $headers['content-type'] = $contentType;
+        }
+
+        return new ServerRequest([], [], null, null, 'php://input', $headers);
     }
 }

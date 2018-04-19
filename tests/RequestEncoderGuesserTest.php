@@ -18,6 +18,8 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
 {
     /**
      * Encoder should throw exception when trying to decode on null request.
+     *
+     * @return void
      */
     public function testDecodeNullRequestException(): void
     {
@@ -129,9 +131,35 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
         foreach ($tests as $encoderClass => $mimeTypes) {
             /** @var array $mimeTypes */
             foreach ($mimeTypes as $mimeType) {
+                /** @noinspection UnnecessaryAssertionInspection Return type hint is interface not specific class */
                 self::assertInstanceOf($encoderClass, $guesser->guessEncoder($this->getRequest($mimeType)));
             }
         }
+    }
+
+    /**
+     * Guesser should return two different encoder objects based on different headers for request and response.
+     *
+     * @return void
+     *
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
+     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
+     */
+    public function testEncoderGuesserReturnsTwoDifferentEncodersBasedOnHeaders(): void
+    {
+        $formats = [
+            JsonRequestEncoder::class => ['application/json'],
+            XmlRequestEncoder::class => ['(application|text)/xml']
+        ];
+
+        $request = $this->getRequest(null, 'application/xml');
+        $guesser = new RequestEncoderGuesser($formats);
+
+        /** @noinspection UnnecessaryAssertionInspection Return type hint is interface not specific class */
+        self::assertInstanceOf(XmlRequestEncoder::class, $guesser->guessRequestEncoder($request));
+        /** @noinspection UnnecessaryAssertionInspection Return type hint is interface not specific class */
+        self::assertInstanceOf(JsonRequestEncoder::class, $guesser->guessResponseEncoder($request));
     }
 
     /**

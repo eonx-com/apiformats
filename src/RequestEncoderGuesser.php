@@ -14,6 +14,11 @@ use Psr\Http\Message\ServerRequestInterface;
 class RequestEncoderGuesser implements RequestEncoderGuesserInterface
 {
     /**
+     * @var array
+     */
+    private static $headers = ['accept', 'content-type'];
+
+    /**
      * @var string
      */
     private $defaultEncoder;
@@ -22,11 +27,6 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
      * @var array
      */
     private $formats;
-
-    /**
-     * @var array
-     */
-    private static $headers = ['accept', 'content-type'];
 
     /**
      * @var array
@@ -59,6 +59,7 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
      * Guess format based on given request.
      *
      * @param ServerRequestInterface $request
+     * @param null|array $headers
      *
      * @return RequestEncoderInterface
      *
@@ -66,13 +67,13 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
      * @throws UnsupportedRequestFormatException
      * @throws InvalidSupportedRequestFormatsConfigException
      */
-    public function guessEncoder(ServerRequestInterface $request): RequestEncoderInterface
+    public function guessEncoder(ServerRequestInterface $request, ?array $headers = null): RequestEncoderInterface
     {
         $this->validateFormats($this->formats);
         $this->setMimeTypes($this->formats);
 
         // Try to guess using headers
-        foreach (static::$headers as $headerName) {
+        foreach ($headers ?? static::$headers as $headerName) {
             $header = $request->getHeader($headerName);
 
             // Skip if header not set
@@ -81,7 +82,7 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
             }
 
             // Retrieve MIME type from request header
-            $mimeType = (string) \reset($header);
+            $mimeType = (string)\reset($header);
             // Get encoder class to use
             $encoderClass = $this->getEncoderClass($mimeType);
 
@@ -102,6 +103,38 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
     }
 
     /**
+     * Guess request encoder based on given request.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     *
+     * @return \EoneoPay\ApiFormats\Interfaces\RequestEncoderInterface
+     *
+     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
+     */
+    public function guessRequestEncoder(ServerRequestInterface $request): RequestEncoderInterface
+    {
+        return $this->guessEncoder($request, $this->getHeaderWithFallbacks('content-type'));
+    }
+
+    /**
+     * Guess response encoder based on given request.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     *
+     * @return \EoneoPay\ApiFormats\Interfaces\RequestEncoderInterface
+     *
+     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
+     */
+    public function guessResponseEncoder(ServerRequestInterface $request): RequestEncoderInterface
+    {
+        return $this->guessEncoder($request, $this->getHeaderWithFallbacks('accept'));
+    }
+
+    /**
      * Get encoder class based on given MIME type.
      *
      * @param string $requestMimeType
@@ -117,6 +150,28 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
         }
 
         return null;
+    }
+
+    /**
+     * Returns a list of header names with the given one as primary (first element).
+     *
+     * @param string $primaryHeader
+     *
+     * @return array
+     */
+    private function getHeaderWithFallbacks(string $primaryHeader): array
+    {
+        $headers = [$primaryHeader];
+
+        foreach (static::$headers as $fallbackHeader) {
+            if ($fallbackHeader === $primaryHeader) {
+                continue;
+            }
+
+            $headers[] = $fallbackHeader;
+        }
+
+        return $headers;
     }
 
     /**
@@ -152,6 +207,8 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
      * Set mimeTypes based on given formats.
      *
      * @param array $formats
+     *
+     * @return void
      */
     private function setMimeTypes(array $formats): void
     {
@@ -171,6 +228,8 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
      * Validate supported formats array.
      *
      * @param array $formats
+     *
+     * @return void
      *
      * @throws InvalidSupportedRequestFormatsConfigException
      */

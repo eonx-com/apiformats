@@ -19,7 +19,7 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
     use LaravelResponseTrait;
 
     /**
-     * @var RequestEncoderGuesserInterface
+     * @var \EoneoPay\ApiFormats\Interfaces\RequestEncoderGuesserInterface
      */
     private $encoderGuesser;
 
@@ -51,19 +51,20 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
         $psr7Request = $this->psr7Factory->createRequest($request);
 
         try {
-            $encoder = $this->encoderGuesser->guessEncoder($psr7Request);
+            $requestEncoder = $this->encoderGuesser->guessRequestEncoder($psr7Request);
+            $responseEncoder = $this->encoderGuesser->guessResponseEncoder($psr7Request);
         } catch (Exception $exception) {
             $request->attributes->set('_encoder', $this->encoderGuesser->defaultEncoder($psr7Request));
             throw $exception;
         }
 
-        $request->attributes->set('_encoder', $encoder);
-        $request->request = new ParameterBag($encoder->decode());
+        $request->attributes->set('_encoder', $requestEncoder);
+        $request->request = new ParameterBag($requestEncoder->decode());
 
         $response = $next($request);
 
         if ($response instanceof FormattedApiResponseInterface) {
-            return $this->createLaravelResponseFromPsr($encoder->encode(
+            return $this->createLaravelResponseFromPsr($responseEncoder->encode(
                 $response->getContent(),
                 $response->getStatusCode(),
                 $response->getHeaders()
@@ -74,6 +75,6 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
             return $response;
         }
 
-        return $this->createLaravelResponseFromPsr($encoder->encode((array) $response));
+        return $this->createLaravelResponseFromPsr($responseEncoder->encode((array) $response));
     }
 }
