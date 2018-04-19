@@ -7,7 +7,7 @@ use EoneoPay\ApiFormats\Exceptions\DecodeNullRequestException;
 use EoneoPay\ApiFormats\Exceptions\InvalidEncoderException;
 use EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException;
 use EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException;
-use EoneoPay\ApiFormats\RequestEncoderGuesser;
+use EoneoPay\ApiFormats\EncoderGuesser;
 use EoneoPay\ApiFormats\RequestEncoders\JsonApiRequestEncoder;
 use EoneoPay\ApiFormats\RequestEncoders\JsonRequestEncoder;
 use EoneoPay\ApiFormats\RequestEncoders\XmlRequestEncoder;
@@ -25,7 +25,7 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
     {
         $this->expectException(DecodeNullRequestException::class);
 
-        (new RequestEncoderGuesser([JsonRequestEncoder::class => ['application/json']]))->defaultEncoder()->decode();
+        (new EncoderGuesser([JsonRequestEncoder::class => ['application/json']]))->defaultEncoder()->decode();
     }
 
     /**
@@ -41,7 +41,7 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
     {
         $this->expectException(InvalidSupportedRequestFormatsConfigException::class);
 
-        (new RequestEncoderGuesser([]))->guessEncoder($this->getRequest());
+        (new EncoderGuesser([]))->guessEncoder($this->getRequest());
     }
 
     /**
@@ -59,7 +59,7 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
 
         $formats = ['invalid_class' => ['application/json']];
 
-        (new RequestEncoderGuesser($formats))->guessEncoder($this->getRequest());
+        (new EncoderGuesser($formats))->guessEncoder($this->getRequest());
     }
 
     /**
@@ -77,7 +77,7 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
 
         $formats = [EncoderWithoutInterface::class => ['application/json']];
 
-        (new RequestEncoderGuesser($formats))->guessEncoder($this->getRequest());
+        (new EncoderGuesser($formats))->guessEncoder($this->getRequest());
     }
 
     /**
@@ -126,7 +126,7 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
             ]
         ];
 
-        $guesser = new RequestEncoderGuesser($formats);
+        $guesser = new EncoderGuesser($formats);
 
         foreach ($tests as $encoderClass => $mimeTypes) {
             /** @var array $mimeTypes */
@@ -154,7 +154,7 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
         ];
 
         $request = $this->getRequest(null, 'application/xml');
-        $guesser = new RequestEncoderGuesser($formats);
+        $guesser = new EncoderGuesser($formats);
 
         /** @noinspection UnnecessaryAssertionInspection Return type hint is interface not specific class */
         self::assertInstanceOf(XmlRequestEncoder::class, $guesser->guessRequestEncoder($request));
@@ -175,7 +175,7 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
     {
         $this->expectException(InvalidSupportedRequestFormatsConfigException::class);
 
-        (new RequestEncoderGuesser([JsonRequestEncoder::class => 'application/json']))
+        (new EncoderGuesser([JsonRequestEncoder::class => 'application/json']))
             ->guessEncoder($this->getRequest());
     }
 
@@ -192,6 +192,6 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
     {
         $this->expectException(InvalidSupportedRequestFormatsConfigException::class);
 
-        (new RequestEncoderGuesser([['application/json']]))->guessEncoder($this->getRequest());
+        (new EncoderGuesser([['application/json']]))->guessEncoder($this->getRequest());
     }
 }

@@ -8,7 +8,7 @@ use EoneoPay\ApiFormats\Bridge\Laravel\Interfaces\ApiFormatsMiddlewareInterface;
 use EoneoPay\ApiFormats\Bridge\Laravel\Traits\LaravelResponseTrait;
 use EoneoPay\ApiFormats\External\Interfaces\Psr7\Psr7FactoryInterface;
 use EoneoPay\ApiFormats\Interfaces\FormattedApiResponseInterface;
-use EoneoPay\ApiFormats\Interfaces\RequestEncoderGuesserInterface;
+use EoneoPay\ApiFormats\Interfaces\EncoderGuesserInterface;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -19,17 +19,17 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
     use LaravelResponseTrait;
 
     /**
-     * @var \EoneoPay\ApiFormats\Interfaces\RequestEncoderGuesserInterface
+     * @var \EoneoPay\ApiFormats\Interfaces\EncoderGuesserInterface
      */
     private $encoderGuesser;
 
     /**
      * ApiFormatsMiddleware constructor.
      *
-     * @param \EoneoPay\ApiFormats\Interfaces\RequestEncoderGuesserInterface $encoderGuesser
+     * @param \EoneoPay\ApiFormats\Interfaces\EncoderGuesserInterface $encoderGuesser
      * @param \EoneoPay\ApiFormats\External\Interfaces\Psr7\Psr7FactoryInterface $psr7Factory
      */
-    public function __construct(RequestEncoderGuesserInterface $encoderGuesser, Psr7FactoryInterface $psr7Factory)
+    public function __construct(EncoderGuesserInterface $encoderGuesser, Psr7FactoryInterface $psr7Factory)
     {
         $this->encoderGuesser = $encoderGuesser;
         $this->psr7Factory = $psr7Factory;
@@ -58,7 +58,7 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
             throw $exception;
         }
 
-        $request->attributes->set('_encoder', $requestEncoder);
+        $request->attributes->set('_encoder', $responseEncoder);
         $request->request = new ParameterBag($requestEncoder->decode());
 
         $response = $next($request);

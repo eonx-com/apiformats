@@ -5,14 +5,14 @@ namespace EoneoPay\ApiFormats\RequestEncoders;
 
 use Doctrine\Common\Inflector\Inflector;
 use EoneoPay\ApiFormats\Exceptions\DecodeNullRequestException;
-use EoneoPay\ApiFormats\Interfaces\RequestEncoderInterface;
+use EoneoPay\ApiFormats\Interfaces\EncoderInterface;
 use EoneoPay\Utils\Interfaces\SerializableInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Stream;
 
-abstract class AbstractRequestEncoder implements RequestEncoderInterface
+abstract class AbstractEncoder implements EncoderInterface
 {
     /**
      * @var string
@@ -25,7 +25,7 @@ abstract class AbstractRequestEncoder implements RequestEncoderInterface
     protected $request;
 
     /**
-     * AbstractRequestEncoder constructor.
+     * AbstractEncoder constructor.
      *
      * @param null|ServerRequestInterface $request
      */
@@ -63,9 +63,9 @@ abstract class AbstractRequestEncoder implements RequestEncoderInterface
      *
      * @param string $content
      *
-     * @return \EoneoPay\ApiFormats\Interfaces\RequestEncoderInterface
+     * @return \EoneoPay\ApiFormats\Interfaces\EncoderInterface
      */
-    public function setContent(string $content): RequestEncoderInterface
+    public function setContent(string $content): EncoderInterface
     {
         $this->content = $content;
 

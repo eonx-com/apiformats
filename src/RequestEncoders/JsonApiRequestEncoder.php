@@ -17,7 +17,7 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) High coupling required due to fractal
  */
-class JsonApiRequestEncoder extends AbstractRequestEncoder
+class JsonApiRequestEncoder extends AbstractEncoder
 {
     /**
      * @var \League\Fractal\Manager

@@ -6,12 +6,12 @@ namespace EoneoPay\ApiFormats;
 use EoneoPay\ApiFormats\Exceptions\InvalidEncoderException;
 use EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException;
 use EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException;
-use EoneoPay\ApiFormats\Interfaces\RequestEncoderGuesserInterface;
-use EoneoPay\ApiFormats\Interfaces\RequestEncoderInterface;
+use EoneoPay\ApiFormats\Interfaces\EncoderGuesserInterface;
+use EoneoPay\ApiFormats\Interfaces\EncoderInterface;
 use EoneoPay\ApiFormats\RequestEncoders\JsonRequestEncoder;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RequestEncoderGuesser implements RequestEncoderGuesserInterface
+class EncoderGuesser implements EncoderGuesserInterface
 {
     /**
      * @var array
@@ -48,9 +48,9 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
      *
      * @param null|ServerRequestInterface $request
      *
-     * @return RequestEncoderInterface
+     * @return EncoderInterface
      */
-    public function defaultEncoder(?ServerRequestInterface $request = null): RequestEncoderInterface
+    public function defaultEncoder(?ServerRequestInterface $request = null): EncoderInterface
     {
         return new JsonRequestEncoder($request);
     }
@@ -61,13 +61,13 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
      * @param ServerRequestInterface $request
      * @param null|array $headers
      *
-     * @return RequestEncoderInterface
+     * @return EncoderInterface
      *
      * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
      * @throws UnsupportedRequestFormatException
      * @throws InvalidSupportedRequestFormatsConfigException
      */
-    public function guessEncoder(ServerRequestInterface $request, ?array $headers = null): RequestEncoderInterface
+    public function guessEncoder(ServerRequestInterface $request, ?array $headers = null): EncoderInterface
     {
         $this->validateFormats($this->formats);
         $this->setMimeTypes($this->formats);
@@ -107,13 +107,13 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
      *
-     * @return \EoneoPay\ApiFormats\Interfaces\RequestEncoderInterface
+     * @return \EoneoPay\ApiFormats\Interfaces\EncoderInterface
      *
      * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
      * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
      */
-    public function guessRequestEncoder(ServerRequestInterface $request): RequestEncoderInterface
+    public function guessRequestEncoder(ServerRequestInterface $request): EncoderInterface
     {
         return $this->guessEncoder($request, $this->getHeaderWithFallbacks('content-type'));
     }
@@ -123,13 +123,13 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
      *
-     * @return \EoneoPay\ApiFormats\Interfaces\RequestEncoderInterface
+     * @return \EoneoPay\ApiFormats\Interfaces\EncoderInterface
      *
      * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
      * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
      */
-    public function guessResponseEncoder(ServerRequestInterface $request): RequestEncoderInterface
+    public function guessResponseEncoder(ServerRequestInterface $request): EncoderInterface
     {
         return $this->guessEncoder($request, $this->getHeaderWithFallbacks('accept'));
     }
@@ -180,11 +180,11 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
      * @param string $encoderClass
      * @param ServerRequestInterface $request
      *
-     * @return RequestEncoderInterface
+     * @return EncoderInterface
      *
      * @throws InvalidEncoderException
      */
-    private function instantiateEncoder(string $encoderClass, ServerRequestInterface $request): RequestEncoderInterface
+    private function instantiateEncoder(string $encoderClass, ServerRequestInterface $request): EncoderInterface
     {
         if (!\class_exists($encoderClass)) {
             throw new InvalidEncoderException(\sprintf('Encoder "%s" does not exist', $encoderClass));
@@ -192,11 +192,11 @@ class RequestEncoderGuesser implements RequestEncoderGuesserInterface
 
         $encoder = new $encoderClass($request);
 
-        if (!$encoder instanceof RequestEncoderInterface) {
+        if (!$encoder instanceof EncoderInterface) {
             throw new InvalidEncoderException(\sprintf(
                 'Encoder "%s" does not implement %s',
                 $encoderClass,
-                RequestEncoderInterface::class
+                EncoderInterface::class
             ));
         }
 

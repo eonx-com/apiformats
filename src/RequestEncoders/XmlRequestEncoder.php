@@ -9,7 +9,7 @@ use EoneoPay\Utils\XmlConverter;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class XmlRequestEncoder extends AbstractRequestEncoder
+class XmlRequestEncoder extends AbstractEncoder
 {
     /**
      * @var \EoneoPay\Utils\Interfaces\XmlConverterInterface

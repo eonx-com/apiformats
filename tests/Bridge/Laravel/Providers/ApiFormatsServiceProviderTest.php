@@ -6,8 +6,8 @@ namespace Tests\EoneoPay\ApiFormats\Bridge\Laravel\Providers;
 use EoneoPay\ApiFormats\Bridge\Laravel\Providers\ApiFormatsServiceProvider;
 use EoneoPay\ApiFormats\External\Interfaces\Psr7\Psr7FactoryInterface;
 use EoneoPay\ApiFormats\External\Libraries\Psr7\Psr7Factory;
-use EoneoPay\ApiFormats\Interfaces\RequestEncoderGuesserInterface;
-use EoneoPay\ApiFormats\RequestEncoderGuesser;
+use EoneoPay\ApiFormats\Interfaces\EncoderGuesserInterface;
+use EoneoPay\ApiFormats\EncoderGuesser;
 use Laravel\Lumen\Application;
 use PHPUnit\Framework\TestCase;
 
@@ -38,7 +38,7 @@ class ApiFormatsServiceProviderTest extends TestCase
         $serviceProvider = new ApiFormatsServiceProvider($application);
         $serviceProvider->register();
 
-        self::assertInstanceOf(RequestEncoderGuesser::class, $application->get(RequestEncoderGuesserInterface::class));
+        self::assertInstanceOf(EncoderGuesser::class, $application->get(EncoderGuesserInterface::class));
         self::assertInstanceOf(Psr7Factory::class, $application->get(Psr7FactoryInterface::class));
     }
 }

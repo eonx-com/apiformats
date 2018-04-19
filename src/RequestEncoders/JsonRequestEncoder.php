@@ -6,7 +6,7 @@ namespace EoneoPay\ApiFormats\RequestEncoders;
 use EoneoPay\Utils\Interfaces\SerializableInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class JsonRequestEncoder extends AbstractRequestEncoder
+class JsonRequestEncoder extends AbstractEncoder
 {
     /**
      * Create response from given data, status code and headers.

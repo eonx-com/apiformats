@@ -6,8 +6,8 @@ namespace EoneoPay\ApiFormats\Bridge\Laravel\Providers;
 use EoneoPay\ApiFormats\Bridge\Laravel\Interfaces\ApiFormatsServiceProviderInterface;
 use EoneoPay\ApiFormats\External\Interfaces\Psr7\Psr7FactoryInterface;
 use EoneoPay\ApiFormats\External\Libraries\Psr7\Psr7Factory;
-use EoneoPay\ApiFormats\Interfaces\RequestEncoderGuesserInterface;
-use EoneoPay\ApiFormats\RequestEncoderGuesser;
+use EoneoPay\ApiFormats\Interfaces\EncoderGuesserInterface;
+use EoneoPay\ApiFormats\EncoderGuesser;
 use Illuminate\Support\ServiceProvider;
 
 class ApiFormatsServiceProvider extends ServiceProvider implements ApiFormatsServiceProviderInterface
@@ -34,7 +34,7 @@ class ApiFormatsServiceProvider extends ServiceProvider implements ApiFormatsSer
         // Merge config to have default values if not set
         $this->mergeConfigFrom(self::CONFIG_PATH, 'api-formats');
 
-        $this->app->singleton(RequestEncoderGuesserInterface::class, $this->getRequestEncoderGuesserClosure());
+        $this->app->singleton(EncoderGuesserInterface::class, $this->getRequestEncoderGuesserClosure());
         $this->app->bind(Psr7FactoryInterface::class, Psr7Factory::class);
     }
 
@@ -50,7 +50,7 @@ class ApiFormatsServiceProvider extends ServiceProvider implements ApiFormatsSer
     private function getRequestEncoderGuesserClosure(): \Closure
     {
         return function () {
-            return new RequestEncoderGuesser($this->app->get('config')->get('api-formats.formats', []));
+            return new EncoderGuesser($this->app->get('config')->get('api-formats.formats', []));
         };
     }
 }

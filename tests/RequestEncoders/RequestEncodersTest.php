@@ -30,7 +30,7 @@ class RequestEncodersTest extends RequestEncoderGuesserTestCase
     public function testDecodeReturnsArray(): void
     {
         foreach (static::$encoders as $encoderClass) {
-            /** @var \EoneoPay\ApiFormats\Interfaces\RequestEncoderInterface $encoder */
+            /** @var \EoneoPay\ApiFormats\Interfaces\EncoderInterface $encoder */
             $encoder = new $encoderClass();
 
             foreach ($this->getEncodersTests() as $test) {
@@ -49,7 +49,7 @@ class RequestEncodersTest extends RequestEncoderGuesserTestCase
     public function testEncodeReturnsResponseInterface(): void
     {
         foreach (static::$encoders as $encoderClass) {
-            /** @var \EoneoPay\ApiFormats\Interfaces\RequestEncoderInterface $encoder */
+            /** @var \EoneoPay\ApiFormats\Interfaces\EncoderInterface $encoder */
             $encoder = new $encoderClass($this->getRequest());
 
             foreach ($this->getEncodersTests() as $test) {

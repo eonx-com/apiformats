@@ -7,7 +7,7 @@ use EoneoPay\ApiFormats\Bridge\Laravel\Middlewares\ApiFormatsMiddleware;
 use EoneoPay\ApiFormats\Bridge\Laravel\Responses\FormattedApiResponse;
 use EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException;
 use EoneoPay\ApiFormats\External\Libraries\Psr7\Psr7Factory;
-use EoneoPay\ApiFormats\RequestEncoderGuesser;
+use EoneoPay\ApiFormats\EncoderGuesser;
 use EoneoPay\ApiFormats\RequestEncoders\JsonRequestEncoder;
 use EoneoPay\ApiFormats\RequestEncoders\XmlRequestEncoder;
 use Illuminate\Http\Request;
@@ -35,7 +35,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
         $this->expectException(UnsupportedRequestFormatException::class);
 
         $psr7Factory = new Psr7Factory();
-        $encoderGuesser = new RequestEncoderGuesser([JsonRequestEncoder::class => ['application/json']]);
+        $encoderGuesser = new EncoderGuesser([JsonRequestEncoder::class => ['application/json']]);
         $request = $this->getRequest(null, ['accept' => 'invalid']);
 
         (new ApiFormatsMiddleware($encoderGuesser, $psr7Factory))->handle($request, function () {
@@ -68,7 +68,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
             ]
         ];
 
-        $middleware = new ApiFormatsMiddleware(new RequestEncoderGuesser($formats), new Psr7Factory());
+        $middleware = new ApiFormatsMiddleware(new EncoderGuesser($formats), new Psr7Factory());
         $next = function (Request $request) {
             return $request->all();
         };
@@ -106,7 +106,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
     public function testReturnDirectlyResponseIfAlreadyLaravelOne(): void
     {
         $psr7Factory = new Psr7Factory();
-        $encoderGuesser = new RequestEncoderGuesser([JsonRequestEncoder::class => ['application/json']]);
+        $encoderGuesser = new EncoderGuesser([JsonRequestEncoder::class => ['application/json']]);
         $request = $this->getRequest();
         $laravelResponse = new Response();
 
@@ -133,7 +133,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
     public function testReturnRightFormattedResponseIfFormattedApiResponse(): void
     {
         $psr7Factory = new Psr7Factory();
-        $encoderGuesser = new RequestEncoderGuesser([JsonRequestEncoder::class => ['application/json']]);
+        $encoderGuesser = new EncoderGuesser([JsonRequestEncoder::class => ['application/json']]);
         $request = $this->getRequest();
         $formattedApiResponse = new FormattedApiResponse(
             ['email' => 'email@eoneopay.com.au'],
@@ -167,7 +167,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
     public function testReturnRightFormattedResponseIfFormattedApiResponseWithSerializableInterface(): void
     {
         $psr7Factory = new Psr7Factory();
-        $encoderGuesser = new RequestEncoderGuesser([JsonRequestEncoder::class => ['application/json']]);
+        $encoderGuesser = new EncoderGuesser([JsonRequestEncoder::class => ['application/json']]);
         $request = $this->getRequest();
         $formattedApiResponse = new FormattedApiResponse(
             new SerializableInterfaceStub(),

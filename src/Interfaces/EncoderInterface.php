@@ -5,7 +5,7 @@ namespace EoneoPay\ApiFormats\Interfaces;
 
 use Psr\Http\Message\ResponseInterface;
 
-interface RequestEncoderInterface
+interface EncoderInterface
 {
     /**
      * Create response from given data, status code and headers.
@@ -30,7 +30,7 @@ interface RequestEncoderInterface
      *
      * @param string $content
      *
-     * @return \EoneoPay\ApiFormats\Interfaces\RequestEncoderInterface
+     * @return \EoneoPay\ApiFormats\Interfaces\EncoderInterface
      */
     public function setContent(string $content): self;
 }
