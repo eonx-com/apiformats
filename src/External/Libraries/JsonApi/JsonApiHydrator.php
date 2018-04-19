@@ -92,17 +92,20 @@ class JsonApiHydrator implements JsonApiHydratorInterface
      */
     private function hydrateResource(?ResourceObject $resource = null, Document $document, array &$resourceMap): array
     {
+        // This is only here for type safety, null is checked before calling method from hydrate()
         if (null === $resource) {
+            // @codeCoverageIgnoreStart
             return [];
+            // @codeCoverageIgnoreEnd
         }
 
         // Fill basic attributes of the resource
         $result = $this->hydrateResultArray($resource);
 
-        //Save resource to the identity map
+        // Save resource to the identity map
         $this->saveObjectToMap($result, $resourceMap);
 
-        //Fill relationships
+        // Fill relationships
         foreach ($resource->relationships() as $name => $relationship) {
             foreach ($relationship->resourceLinks() as $link) {
                 $object = $this->getObjectFromMap($link['type'], $link['id'], $resourceMap);
