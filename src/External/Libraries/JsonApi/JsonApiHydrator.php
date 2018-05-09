@@ -18,11 +18,11 @@ class JsonApiHydrator implements JsonApiHydratorInterface
      */
     public function hydrate(Document $document): array
     {
-        if (false === $document->hasAnyPrimaryResources()) {
+        if ($document->hasAnyPrimaryResources() === false) {
             return [];
         }
 
-        if ($document->isSingleResourceDocument() && null !== $document->primaryResource()) {
+        if ($document->isSingleResourceDocument() && $document->primaryResource() !== null) {
             return [$document->primaryResource()->type() => $this->hydratePrimaryResource($document)];
         }
 
@@ -71,7 +71,7 @@ class JsonApiHydrator implements JsonApiHydratorInterface
         $type = null;
 
         foreach ($document->primaryResources() as $primaryResource) {
-            if (null === $type) {
+            if ($type === null) {
                 $type = $primaryResource->type();
             }
 
@@ -93,7 +93,7 @@ class JsonApiHydrator implements JsonApiHydratorInterface
     private function hydrateResource(?ResourceObject $resource = null, Document $document, array &$resourceMap): array
     {
         // This is only here for type safety, null is checked before calling method from hydrate()
-        if (null === $resource) {
+        if ($resource === null) {
             // @codeCoverageIgnoreStart
             return [];
             // @codeCoverageIgnoreEnd
@@ -110,15 +110,15 @@ class JsonApiHydrator implements JsonApiHydratorInterface
             foreach ($relationship->resourceLinks() as $link) {
                 $object = $this->getObjectFromMap($link['type'], $link['id'], $resourceMap);
 
-                if (null === $object && $document->hasIncludedResource($link['type'], $link['id'])) {
+                if ($object === null && $document->hasIncludedResource($link['type'], $link['id'])) {
                     $relatedResource = $document->resource($link['type'], $link['id']);
 
-                    if (null !== $relatedResource) {
+                    if ($relatedResource !== null) {
                         $object = $this->hydrateResource($relatedResource, $document, $resourceMap);
                     }
                 }
 
-                if (null === $object) {
+                if ($object === null) {
                     continue;
                 }
 

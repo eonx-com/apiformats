@@ -77,7 +77,7 @@ class EncoderGuesser implements EncoderGuesserInterface
             $header = $request->getHeader($headerName);
 
             // Skip if header not set
-            if (empty($header) || '*/*' === \reset($header)) {
+            if (empty($header) || \reset($header) === '*/*') {
                 continue;
             }
 
@@ -87,7 +87,7 @@ class EncoderGuesser implements EncoderGuesserInterface
             $encoderClass = $this->getEncoderClass($mimeType);
 
             // Throw exception if not supported
-            if (null === $encoderClass) {
+            if ($encoderClass === null) {
                 throw new UnsupportedRequestFormatException(\sprintf(
                     'Unsupported requested format "%s". Supported formats: [%s].',
                     $mimeType,
@@ -213,7 +213,7 @@ class EncoderGuesser implements EncoderGuesserInterface
     private function setMimeTypes(array $formats): void
     {
         foreach ($formats as $encoder => $mimeTypes) {
-            if (null === $this->defaultEncoder) {
+            if ($this->defaultEncoder === null) {
                 $this->defaultEncoder = $encoder;
             }
 
