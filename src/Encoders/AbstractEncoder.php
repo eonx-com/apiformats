@@ -45,13 +45,13 @@ abstract class AbstractEncoder implements EncoderInterface
      */
     public function decode(): array
     {
-        if (null === $this->request && null === $this->content) {
+        if ($this->request === null && $this->content === null) {
             throw new DecodeNullRequestException('Request must be set to decode content');
         }
 
         $content = $this->content ?? ($this->request ? $this->request->getBody()->getContents() : '');
 
-        if ('' === $content) {
+        if ($content === '') {
             return [];
         }
 

@@ -38,7 +38,7 @@ abstract class RequestEncoderGuesserTestCase extends TestCase
     {
         $headers = ['accept' => $accept ?? 'application/json'];
 
-        if (null !== $contentType) {
+        if ($contentType !== null) {
             $headers['content-type'] = $contentType;
         }
 
