@@ -13,7 +13,7 @@ use Tests\EoneoPay\ApiFormats\TestCases\RequestEncoderGuesserTestCase;
 class RequestEncodersTest extends RequestEncoderGuesserTestCase
 {
     /**
-     * @var array
+     * @var string[]
      */
     private static $encoders = [
         JsonApiEncoder::class,

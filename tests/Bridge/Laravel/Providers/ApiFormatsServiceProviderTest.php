@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Tests\EoneoPay\ApiFormats\Bridge\Laravel\Providers;
 
 use EoneoPay\ApiFormats\Bridge\Laravel\Providers\ApiFormatsServiceProvider;
+use EoneoPay\ApiFormats\EncoderGuesser;
 use EoneoPay\ApiFormats\External\Interfaces\Psr7\Psr7FactoryInterface;
 use EoneoPay\ApiFormats\External\Libraries\Psr7\Psr7Factory;
 use EoneoPay\ApiFormats\Interfaces\EncoderGuesserInterface;
-use EoneoPay\ApiFormats\EncoderGuesser;
 use Laravel\Lumen\Application;
 use PHPUnit\Framework\TestCase;
 

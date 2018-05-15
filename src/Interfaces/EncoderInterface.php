@@ -8,22 +8,22 @@ use Psr\Http\Message\ResponseInterface;
 interface EncoderInterface
 {
     /**
+     * Decode request content to array.
+     *
+     * @return mixed[]
+     */
+    public function decode(): array;
+
+    /**
      * Create response from given data, status code and headers.
      *
      * @param mixed $data
      * @param int|null $statusCode
-     * @param array|null $headers
+     * @param string[]|null $headers
      *
-     * @return ResponseInterface
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function encode($data, ?int $statusCode = null, ?array $headers = null): ResponseInterface;
-
-    /**
-     * Decode request content to array.
-     *
-     * @return array
-     */
-    public function decode(): array;
 
     /**
      * Manually set content to decode.

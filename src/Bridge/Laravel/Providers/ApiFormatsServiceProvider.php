@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace EoneoPay\ApiFormats\Bridge\Laravel\Providers;
 
 use EoneoPay\ApiFormats\Bridge\Laravel\Interfaces\ApiFormatsServiceProviderInterface;
+use EoneoPay\ApiFormats\EncoderGuesser;
 use EoneoPay\ApiFormats\External\Interfaces\Psr7\Psr7FactoryInterface;
 use EoneoPay\ApiFormats\External\Libraries\Psr7\Psr7Factory;
 use EoneoPay\ApiFormats\Interfaces\EncoderGuesserInterface;
-use EoneoPay\ApiFormats\EncoderGuesser;
 use Illuminate\Support\ServiceProvider;
 
 class ApiFormatsServiceProvider extends ServiceProvider implements ApiFormatsServiceProviderInterface
@@ -16,6 +16,8 @@ class ApiFormatsServiceProvider extends ServiceProvider implements ApiFormatsSer
 
     /**
      * Boot api formats services.
+     *
+     * @return void
      */
     public function boot(): void
     {

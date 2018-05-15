@@ -13,7 +13,7 @@ abstract class RequestEncoderGuesserTestCase extends TestCase
     /**
      * Get test inputs for encoders tests.
      *
-     * @return array
+     * @return mixed[]
      */
     protected function getEncodersTests(): array
     {

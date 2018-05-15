@@ -3,14 +3,13 @@ declare(strict_types=1);
 
 namespace Tests\EoneoPay\ApiFormats;
 
-use EoneoPay\ApiFormats\Exceptions\DecodeNullRequestException;
-use EoneoPay\ApiFormats\Exceptions\InvalidEncoderException;
-use EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException;
-use EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException;
 use EoneoPay\ApiFormats\EncoderGuesser;
 use EoneoPay\ApiFormats\Encoders\JsonApiEncoder;
 use EoneoPay\ApiFormats\Encoders\JsonEncoder;
 use EoneoPay\ApiFormats\Encoders\XmlEncoder;
+use EoneoPay\ApiFormats\Exceptions\DecodeNullRequestException;
+use EoneoPay\ApiFormats\Exceptions\InvalidEncoderException;
+use EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException;
 use Tests\EoneoPay\ApiFormats\Stubs\EncoderWithoutInterface;
 use Tests\EoneoPay\ApiFormats\TestCases\RequestEncoderGuesserTestCase;
 
@@ -33,9 +32,9 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
      *
      * @return void
      *
-     * @throws InvalidEncoderException
-     * @throws UnsupportedRequestFormatException
-     * @throws InvalidSupportedRequestFormatsConfigException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
+     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      */
     public function testEmptyFormatsException(): void
     {
@@ -49,9 +48,9 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
      *
      * @return void
      *
-     * @throws InvalidEncoderException
-     * @throws UnsupportedRequestFormatException
-     * @throws InvalidSupportedRequestFormatsConfigException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
+     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      */
     public function testEncoderClassDoesntExistException(): void
     {
@@ -67,9 +66,9 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
      *
      * @return void
      *
-     * @throws InvalidEncoderException
-     * @throws UnsupportedRequestFormatException
-     * @throws InvalidSupportedRequestFormatsConfigException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
+     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      */
     public function testEncoderDoesntImplementRightInterfaceException(): void
     {
@@ -85,9 +84,9 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
      *
      * @return void
      *
-     * @throws InvalidEncoderException
-     * @throws UnsupportedRequestFormatException
-     * @throws InvalidSupportedRequestFormatsConfigException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
+     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      */
     public function testEncoderGuessedUsingRegex(): void
     {
@@ -167,9 +166,9 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
      *
      * @return void
      *
-     * @throws InvalidEncoderException
-     * @throws UnsupportedRequestFormatException
-     * @throws InvalidSupportedRequestFormatsConfigException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
+     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      */
     public function testNotArrayMimeTypesException(): void
     {
@@ -184,9 +183,9 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
      *
      * @return void
      *
-     * @throws InvalidEncoderException
-     * @throws UnsupportedRequestFormatException
-     * @throws InvalidSupportedRequestFormatsConfigException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
+     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      */
     public function testNumericKeysForFormatsException(): void
     {

@@ -12,11 +12,11 @@ abstract class BridgeLaravelMiddlewaresTestCase extends TestCase
      * Get request instance.
      *
      * @param string|null $content
-     * @param array|null $headers
+     * @param string[]|null $headers
      *
      * @return \Illuminate\Http\Request
      */
-    protected function getRequest(string $content = null, array $headers = null): Request
+    protected function getRequest(?string $content = null, ?array $headers = null): Request
     {
         $request = new Request([], [], [], [], [], [], $content);
 

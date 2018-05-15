@@ -3,18 +3,18 @@ declare(strict_types=1);
 
 namespace EoneoPay\ApiFormats;
 
+use EoneoPay\ApiFormats\Encoders\JsonEncoder;
 use EoneoPay\ApiFormats\Exceptions\InvalidEncoderException;
 use EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException;
 use EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException;
 use EoneoPay\ApiFormats\Interfaces\EncoderGuesserInterface;
 use EoneoPay\ApiFormats\Interfaces\EncoderInterface;
-use EoneoPay\ApiFormats\Encoders\JsonEncoder;
 use Psr\Http\Message\ServerRequestInterface;
 
 class EncoderGuesser implements EncoderGuesserInterface
 {
     /**
-     * @var array
+     * @var string[]
      */
     private static $headers = ['accept', 'content-type'];
 
@@ -24,19 +24,19 @@ class EncoderGuesser implements EncoderGuesserInterface
     private $defaultEncoder;
 
     /**
-     * @var array
+     * @var string[]
      */
     private $formats;
 
     /**
-     * @var array
+     * @var string[]
      */
     private $mimeTypes = [];
 
     /**
      * RequestFormatGuesser constructor.
      *
-     * @param array $formats
+     * @param mixed[] $formats
      */
     public function __construct(array $formats)
     {
@@ -46,9 +46,9 @@ class EncoderGuesser implements EncoderGuesserInterface
     /**
      * Get default encoder when formats configuration invalid.
      *
-     * @param null|ServerRequestInterface $request
+     * @param null|\Psr\Http\Message\ServerRequestInterface $request
      *
-     * @return EncoderInterface
+     * @return \EoneoPay\ApiFormats\Interfaces\EncoderInterface
      */
     public function defaultEncoder(?ServerRequestInterface $request = null): EncoderInterface
     {
@@ -58,14 +58,14 @@ class EncoderGuesser implements EncoderGuesserInterface
     /**
      * Guess format based on given request.
      *
-     * @param ServerRequestInterface $request
-     * @param null|array $headers
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param null|string[] $headers
      *
-     * @return EncoderInterface
+     * @return \EoneoPay\ApiFormats\Interfaces\EncoderInterface
      *
      * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
-     * @throws UnsupportedRequestFormatException
-     * @throws InvalidSupportedRequestFormatsConfigException
+     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      */
     public function guessEncoder(ServerRequestInterface $request, ?array $headers = null): EncoderInterface
     {
@@ -157,7 +157,7 @@ class EncoderGuesser implements EncoderGuesserInterface
      *
      * @param string $primaryHeader
      *
-     * @return array
+     * @return string[]
      */
     private function getHeaderWithFallbacks(string $primaryHeader): array
     {
@@ -178,21 +178,21 @@ class EncoderGuesser implements EncoderGuesserInterface
      * Instantiate the encoder based on the class and the request.
      *
      * @param string $encoderClass
-     * @param ServerRequestInterface $request
+     * @param \Psr\Http\Message\ServerRequestInterface $request
      *
-     * @return EncoderInterface
+     * @return \EoneoPay\ApiFormats\Interfaces\EncoderInterface
      *
-     * @throws InvalidEncoderException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
      */
     private function instantiateEncoder(string $encoderClass, ServerRequestInterface $request): EncoderInterface
     {
-        if (!\class_exists($encoderClass)) {
+        if (\class_exists($encoderClass) === false) {
             throw new InvalidEncoderException(\sprintf('Encoder "%s" does not exist', $encoderClass));
         }
 
         $encoder = new $encoderClass($request);
 
-        if (!$encoder instanceof EncoderInterface) {
+        if (($encoder instanceof EncoderInterface) === false) {
             throw new InvalidEncoderException(\sprintf(
                 'Encoder "%s" does not implement %s',
                 $encoderClass,
@@ -206,7 +206,7 @@ class EncoderGuesser implements EncoderGuesserInterface
     /**
      * Set mimeTypes based on given formats.
      *
-     * @param array $formats
+     * @param mixed[] $formats
      *
      * @return void
      */
@@ -227,11 +227,11 @@ class EncoderGuesser implements EncoderGuesserInterface
     /**
      * Validate supported formats array.
      *
-     * @param array $formats
+     * @param mixed[] $formats
      *
      * @return void
      *
-     * @throws InvalidSupportedRequestFormatsConfigException
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      */
     private function validateFormats(array $formats): void
     {
@@ -240,14 +240,14 @@ class EncoderGuesser implements EncoderGuesserInterface
         }
 
         foreach ($formats as $encoder => $mimeTypes) {
-            if (!\is_string($encoder)) {
+            if (\is_string($encoder) === false) {
                 throw new InvalidSupportedRequestFormatsConfigException(\sprintf(
                     'Supported format name has to be a string, %s given.',
                     \gettype($encoder)
                 ));
             }
 
-            if (!\is_array($mimeTypes)) {
+            if (\is_array($mimeTypes) === false) {
                 throw new InvalidSupportedRequestFormatsConfigException(\sprintf(
                     'Supported MIME types has to be an array, "%s" => %s given.',
                     $encoder,

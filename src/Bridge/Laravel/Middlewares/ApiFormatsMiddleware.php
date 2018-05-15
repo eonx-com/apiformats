@@ -7,8 +7,8 @@ use Closure;
 use EoneoPay\ApiFormats\Bridge\Laravel\Interfaces\ApiFormatsMiddlewareInterface;
 use EoneoPay\ApiFormats\Bridge\Laravel\Traits\LaravelResponseTrait;
 use EoneoPay\ApiFormats\External\Interfaces\Psr7\Psr7FactoryInterface;
-use EoneoPay\ApiFormats\Interfaces\FormattedApiResponseInterface;
 use EoneoPay\ApiFormats\Interfaces\EncoderGuesserInterface;
+use EoneoPay\ApiFormats\Interfaces\FormattedApiResponseInterface;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -38,8 +38,8 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
     /**
      * Handle incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      *
      * @return mixed
      *
@@ -75,6 +75,6 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
             return $response;
         }
 
-        return $this->createLaravelResponseFromPsr($responseEncoder->encode((array) $response));
+        return $this->createLaravelResponseFromPsr($responseEncoder->encode((array)$response));
     }
 }

@@ -32,8 +32,8 @@ class Psr7Factory implements Psr7FactoryInterface
      * @param \Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface|null $httpMessage
      */
     public function __construct(
-        HttpFoundationFactoryInterface $httpFoundation = null,
-        HttpMessageFactoryInterface $httpMessage = null
+        ?HttpFoundationFactoryInterface $httpFoundation = null,
+        ?HttpMessageFactoryInterface $httpMessage = null
     ) {
         $this->httpFoundation = $httpFoundation ?? new HttpFoundationFactory();
         $this->httpMessage = $httpMessage ?? new DiactorosFactory();
