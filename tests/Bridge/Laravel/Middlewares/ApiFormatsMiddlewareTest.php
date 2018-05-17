@@ -5,11 +5,11 @@ namespace Tests\EoneoPay\ApiFormats\Bridge\Laravel\Middlewares;
 
 use EoneoPay\ApiFormats\Bridge\Laravel\Middlewares\ApiFormatsMiddleware;
 use EoneoPay\ApiFormats\Bridge\Laravel\Responses\FormattedApiResponse;
-use EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException;
-use EoneoPay\ApiFormats\External\Libraries\Psr7\Psr7Factory;
 use EoneoPay\ApiFormats\EncoderGuesser;
 use EoneoPay\ApiFormats\Encoders\JsonEncoder;
 use EoneoPay\ApiFormats\Encoders\XmlEncoder;
+use EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException;
+use EoneoPay\ApiFormats\External\Libraries\Psr7\Psr7Factory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Tests\EoneoPay\ApiFormats\Stubs\SerializableInterfaceStub;
@@ -38,7 +38,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
         $encoderGuesser = new EncoderGuesser([JsonEncoder::class => ['application/json']]);
         $request = $this->getRequest(null, ['accept' => 'invalid']);
 
-        (new ApiFormatsMiddleware($encoderGuesser, $psr7Factory))->handle($request, function () {
+        (new ApiFormatsMiddleware($encoderGuesser, $psr7Factory))->handle($request, function (): void {
         });
 
         self::assertInstanceOf(JsonEncoder::class, $request->attributes->get('_encoder'));
@@ -79,7 +79,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
 
             self::assertInstanceOf($encoder, $request->attributes->get('_encoder'));
             self::assertInstanceOf(Response::class, $response);
-            /** @var Response $response */
+            /** @var \Illuminate\Http\Response $response */
             self::assertEquals($test['mime_type'], $response->headers->get('Content-Type'));
 
             switch ($encoder) {

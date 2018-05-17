@@ -13,9 +13,9 @@ class JsonEncoder extends AbstractEncoder
      *
      * @param mixed $data
      * @param int|null $statusCode
-     * @param array|null $headers
+     * @param string[]|null $headers
      *
-     * @return ResponseInterface
+     * @return \Psr\Http\Message\ResponseInterface
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
@@ -26,7 +26,7 @@ class JsonEncoder extends AbstractEncoder
             $data = $data->toArray();
         }
 
-        return $this->response(\json_encode((array) $data), $statusCode, $headers);
+        return $this->response(\json_encode((array)$data), $statusCode, $headers);
     }
 
     /**
@@ -34,7 +34,7 @@ class JsonEncoder extends AbstractEncoder
      *
      * @param string $content
      *
-     * @return array
+     * @return mixed[]
      */
     protected function decodeRequestContent(string $content): array
     {

@@ -15,7 +15,7 @@ interface FormattedApiResponseInterface
     /**
      * Get response headers.
      *
-     * @return array
+     * @return string[]
      */
     public function getHeaders(): array;
 

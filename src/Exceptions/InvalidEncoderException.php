@@ -8,5 +8,5 @@ use EoneoPay\Utils\Exceptions\CriticalException;
 
 class InvalidEncoderException extends CriticalException implements ApiFormatsExceptionInterface
 {
-    //
+    
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace EoneoPay\ApiFormats\Bridge\Laravel\Responses;
 
 use EoneoPay\ApiFormats\Interfaces\FormattedApiResponseInterface;
-use EoneoPay\Utils\Interfaces\SerializableInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -17,11 +16,11 @@ class FormattedApiResponse extends Response implements FormattedApiResponseInter
      *
      * @param mixed $content
      * @param int|null $statusCode
-     * @param array|null $headers
+     * @param mixed[]|null $headers
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($content, int $statusCode = null, array $headers = null)
+    public function __construct($content, ?int $statusCode = null, ?array $headers = null)
     {
         parent::__construct();
 
@@ -33,7 +32,7 @@ class FormattedApiResponse extends Response implements FormattedApiResponseInter
     /**
      * Get headers.
      *
-     * @return array
+     * @return mixed[]
      */
     public function getHeaders(): array
     {

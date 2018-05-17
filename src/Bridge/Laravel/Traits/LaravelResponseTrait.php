@@ -11,7 +11,7 @@ use Psr\Http\Message\ResponseInterface;
 trait LaravelResponseTrait
 {
     /**
-     * @var \EoneoPay\ApiFormats\External\Interfaces\Psr7FactoryInterface
+     * @var \EoneoPay\ApiFormats\External\Interfaces\Psr7\Psr7FactoryInterface
      */
     private $psr7Factory;
 
@@ -28,7 +28,7 @@ trait LaravelResponseTrait
      */
     protected function createLaravelResponseFromPsr(ResponseInterface $response): Response
     {
-        if (!$this->psr7Factory instanceof Psr7FactoryInterface) {
+        if (($this->psr7Factory instanceof Psr7FactoryInterface) === false) {
             throw new InvalidPsr7FactoryException(\sprintf(
                 '%s::$psr7Factory value must implement %s to use %s',
                 \get_class($this),

@@ -13,7 +13,7 @@ class SerializableInterfaceTransformer extends TransformerAbstract
      *
      * @param \EoneoPay\Utils\Interfaces\SerializableInterface $serializable
      *
-     * @return array
+     * @return mixed[]
      */
     public function transform(SerializableInterface $serializable): array
     {

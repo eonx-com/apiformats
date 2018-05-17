@@ -10,7 +10,7 @@ interface JsonApiConverterInterface
      *
      * @param string $jsonApi
      *
-     * @return array
+     * @return mixed[]
      */
     public function jsonApiToArray(string $jsonApi): array;
 }

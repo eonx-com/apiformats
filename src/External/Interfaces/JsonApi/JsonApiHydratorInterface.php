@@ -12,7 +12,7 @@ interface JsonApiHydratorInterface
      *
      * @param \WoohooLabs\Yang\JsonApi\Schema\Document $document
      *
-     * @return array
+     * @return mixed[]
      */
     public function hydrate(Document $document): array;
 }

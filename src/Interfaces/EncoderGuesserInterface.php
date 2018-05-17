@@ -10,19 +10,19 @@ interface EncoderGuesserInterface
     /**
      * Get default encoder when formats configuration invalid.
      *
-     * @param null|ServerRequestInterface $request
+     * @param null|\Psr\Http\Message\ServerRequestInterface $request
      *
-     * @return EncoderInterface
+     * @return \EoneoPay\ApiFormats\Interfaces\EncoderInterface
      */
     public function defaultEncoder(?ServerRequestInterface $request = null): EncoderInterface;
 
     /**
      * Guess encoder based on given request and given headers to check.
      *
-     * @param ServerRequestInterface $request
-     * @param null|array $headers
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param null|string[] $headers
      *
-     * @return EncoderInterface
+     * @return \EoneoPay\ApiFormats\Interfaces\EncoderInterface
      *
      * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
      * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException

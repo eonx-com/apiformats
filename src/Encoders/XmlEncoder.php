@@ -34,7 +34,7 @@ class XmlEncoder extends AbstractEncoder
      *
      * @param mixed $data
      * @param int|null $statusCode
-     * @param array|null $headers
+     * @param string[]|null $headers
      *
      * @return \Psr\Http\Message\ResponseInterface
      *
@@ -53,7 +53,7 @@ class XmlEncoder extends AbstractEncoder
             $data = $this->collectionToArray($data);
         }
 
-        return $this->response($this->xmlConverter->arrayToXml((array) $data) ?? '', $statusCode, $headers);
+        return $this->response($this->xmlConverter->arrayToXml((array)$data) ?? '', $statusCode, $headers);
     }
 
     /**
@@ -61,7 +61,9 @@ class XmlEncoder extends AbstractEncoder
      *
      * @param string $content
      *
-     * @return array
+     * @return mixed[]
+     *
+     * @throws \EoneoPay\Utils\Exceptions\InvalidXmlException
      */
     protected function decodeRequestContent(string $content): array
     {
@@ -81,9 +83,9 @@ class XmlEncoder extends AbstractEncoder
     /**
      * Convert collection to array.
      *
-     * @param array $data
+     * @param mixed[] $data
      *
-     * @return array
+     * @return mixed[]
      *
      * @throws \ReflectionException
      */
@@ -92,7 +94,7 @@ class XmlEncoder extends AbstractEncoder
         $array = [];
 
         foreach ($data as $item) {
-            $array[] = $item instanceof SerializableInterface ? $item->toArray() : (array) $item;
+            $array[] = $item instanceof SerializableInterface ? $item->toArray() : (array)$item;
         }
 
         return [$this->getResourceKey($data) => $array];

@@ -14,7 +14,7 @@ class JsonApiHydrator implements JsonApiHydratorInterface
      *
      * @param \WoohooLabs\Yang\JsonApi\Schema\Document $document
      *
-     * @return array
+     * @return mixed[]
      */
     public function hydrate(Document $document): array
     {
@@ -34,9 +34,9 @@ class JsonApiHydrator implements JsonApiHydratorInterface
      *
      * @param string $type
      * @param string $objectId
-     * @param array $resourceMap
+     * @param mixed[] $resourceMap
      *
-     * @return array|null
+     * @return mixed[]|null
      */
     private function getObjectFromMap(string $type, string $objectId, array $resourceMap): ?array
     {
@@ -48,7 +48,7 @@ class JsonApiHydrator implements JsonApiHydratorInterface
      *
      * @param \WoohooLabs\Yang\JsonApi\Schema\Document $document
      *
-     * @return array
+     * @return mixed[]
      */
     private function hydratePrimaryResource(Document $document): array
     {
@@ -62,7 +62,7 @@ class JsonApiHydrator implements JsonApiHydratorInterface
      *
      * @param \WoohooLabs\Yang\JsonApi\Schema\Document $document
      *
-     * @return array
+     * @return mixed[]
      */
     private function hydratePrimaryResources(Document $document): array
     {
@@ -86,9 +86,9 @@ class JsonApiHydrator implements JsonApiHydratorInterface
      *
      * @param null|\WoohooLabs\Yang\JsonApi\Schema\ResourceObject $resource
      * @param \WoohooLabs\Yang\JsonApi\Schema\Document $document
-     * @param array $resourceMap
+     * @param mixed[] $resourceMap
      *
-     * @return array
+     * @return mixed[]
      */
     private function hydrateResource(?ResourceObject $resource = null, Document $document, array &$resourceMap): array
     {
@@ -140,7 +140,7 @@ class JsonApiHydrator implements JsonApiHydratorInterface
      *
      * @param \WoohooLabs\Yang\JsonApi\Schema\ResourceObject $resource
      *
-     * @return array
+     * @return mixed[]
      */
     private function hydrateResultArray(ResourceObject $resource): array
     {
@@ -159,8 +159,8 @@ class JsonApiHydrator implements JsonApiHydratorInterface
     /**
      * Save object to map.
      *
-     * @param array $object
-     * @param array $resourceMap
+     * @param mixed[] $object
+     * @param mixed[] $resourceMap
      *
      * @return void
      */

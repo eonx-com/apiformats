@@ -54,9 +54,9 @@ class JsonApiEncoder extends AbstractEncoder
      *
      * @param mixed $data
      * @param int|null $statusCode
-     * @param array|null $headers
+     * @param string[]|null $headers
      *
-     * @return ResponseInterface
+     * @return \Psr\Http\Message\ResponseInterface
      *
      * @throws \ReflectionException
      * @throws \RuntimeException
@@ -76,7 +76,7 @@ class JsonApiEncoder extends AbstractEncoder
      *
      * @param string $content
      *
-     * @return array
+     * @return mixed[]
      */
     protected function decodeRequestContent(string $content): array
     {
@@ -97,7 +97,7 @@ class JsonApiEncoder extends AbstractEncoder
      * Return empty response.
      *
      * @param int|null $statusCode
-     * @param array|null $headers
+     * @param string[]|null $headers
      *
      * @return \Psr\Http\Message\ResponseInterface
      *
@@ -180,7 +180,7 @@ class JsonApiEncoder extends AbstractEncoder
      *
      * @param mixed $data
      * @param int|null $statusCode
-     * @param array|null $headers
+     * @param string[]|null $headers
      *
      * @return \Psr\Http\Message\ResponseInterface
      *

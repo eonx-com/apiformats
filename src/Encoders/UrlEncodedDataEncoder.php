@@ -13,7 +13,7 @@ class UrlEncodedDataEncoder extends AbstractEncoder
      *
      * @param mixed $data
      * @param int|null $statusCode
-     * @param array|null $headers
+     * @param string[]|null $headers
      *
      * @return \Psr\Http\Message\ResponseInterface
      *
@@ -34,7 +34,7 @@ class UrlEncodedDataEncoder extends AbstractEncoder
      *
      * @param string $content
      *
-     * @return array
+     * @return mixed[]
      */
     protected function decodeRequestContent(string $content): array
     {

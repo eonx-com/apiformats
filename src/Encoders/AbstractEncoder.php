@@ -15,19 +15,19 @@ use Zend\Diactoros\Stream;
 abstract class AbstractEncoder implements EncoderInterface
 {
     /**
+     * @var null|\Psr\Http\Message\ServerRequestInterface
+     */
+    protected $request;
+
+    /**
      * @var string
      */
     private $content;
 
     /**
-     * @var null|ServerRequestInterface
-     */
-    protected $request;
-
-    /**
      * AbstractEncoder constructor.
      *
-     * @param null|ServerRequestInterface $request
+     * @param null|\Psr\Http\Message\ServerRequestInterface $request
      */
     public function __construct(?ServerRequestInterface $request = null)
     {
@@ -37,7 +37,7 @@ abstract class AbstractEncoder implements EncoderInterface
     /**
      * Decode request content to array.
      *
-     * @return array
+     * @return mixed[]
      *
      * @throws \EoneoPay\Utils\Exceptions\BaseException
      * @throws \EoneoPay\ApiFormats\Exceptions\DecodeNullRequestException
@@ -77,7 +77,7 @@ abstract class AbstractEncoder implements EncoderInterface
      *
      * @param string $content
      *
-     * @return array
+     * @return mixed[]
      */
     abstract protected function decodeRequestContent(string $content): array;
 
@@ -104,7 +104,7 @@ abstract class AbstractEncoder implements EncoderInterface
             return $this->getResourceKeyForSerializable($data);
         }
 
-        $data = (array) $data;
+        $data = (array)$data;
         if ($this->isCollection($data)) {
             foreach ($data as $item) {
                 // Set resource key as first object plural name found
@@ -121,7 +121,7 @@ abstract class AbstractEncoder implements EncoderInterface
     /**
      * Check if given data is collection.
      *
-     * @param array $data
+     * @param mixed[] $data
      *
      * @return bool
      */
@@ -135,9 +135,9 @@ abstract class AbstractEncoder implements EncoderInterface
      *
      * @param string $content
      * @param int|null $statusCode
-     * @param array|null $headers
+     * @param string[]|null $headers
      *
-     * @return ResponseInterface
+     * @return \Psr\Http\Message\ResponseInterface
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
