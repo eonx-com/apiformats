@@ -5,6 +5,7 @@ namespace EoneoPay\ApiFormats\Bridge\Laravel\Middlewares;
 
 use Closure;
 use EoneoPay\ApiFormats\Bridge\Laravel\Interfaces\ApiFormatsMiddlewareInterface;
+use EoneoPay\ApiFormats\Bridge\Laravel\Responses\NoContentApiResponse;
 use EoneoPay\ApiFormats\Bridge\Laravel\Traits\LaravelResponseTrait;
 use EoneoPay\ApiFormats\External\Interfaces\Psr7\Psr7FactoryInterface;
 use EoneoPay\ApiFormats\Interfaces\EncoderGuesserInterface;
@@ -62,6 +63,10 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
         $request->request = new ParameterBag($requestEncoder->decode());
 
         $response = $next($request);
+
+        if ($response instanceof NoContentApiResponse) {
+            return $response;
+        }
 
         if ($response instanceof FormattedApiResponseInterface) {
             return $this->createLaravelResponseFromPsr($responseEncoder->encode(

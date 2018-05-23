@@ -5,6 +5,7 @@ namespace EoneoPay\ApiFormats\Bridge\Laravel\Responses;
 
 use EoneoPay\ApiFormats\Interfaces\FormattedApiResponseInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * This class has for purpose to easily customise status code and/or headers for given content.
@@ -26,7 +27,7 @@ class FormattedApiResponse extends Response implements FormattedApiResponseInter
 
         $this->content = $content;
         $this->statusCode = $statusCode ?? 200;
-        $this->headers = $headers ?? [];
+        $this->headers = new ResponseHeaderBag($headers ?? []);
     }
 
     /**
@@ -36,16 +37,6 @@ class FormattedApiResponse extends Response implements FormattedApiResponseInter
      */
     public function getHeaders(): array
     {
-        return $this->headers;
-    }
-
-    /**
-     * Get status code.
-     *
-     * @return int
-     */
-    public function getStatusCode(): int
-    {
-        return parent::getStatusCode();
+        return $this->headers->all();
     }
 }
