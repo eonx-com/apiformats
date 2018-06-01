@@ -5,6 +5,7 @@ namespace Tests\EoneoPay\ApiFormats\Bridge\Laravel\Middlewares;
 
 use EoneoPay\ApiFormats\Bridge\Laravel\Middlewares\ApiFormatsMiddleware;
 use EoneoPay\ApiFormats\Bridge\Laravel\Responses\FormattedApiResponse;
+use EoneoPay\ApiFormats\Bridge\Laravel\Responses\NoContentApiResponse;
 use EoneoPay\ApiFormats\EncoderGuesser;
 use EoneoPay\ApiFormats\Encoders\JsonEncoder;
 use EoneoPay\ApiFormats\Encoders\XmlEncoder;
@@ -91,6 +92,32 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
                     break;
             }
         }
+    }
+
+    /**
+     * Middleware should return empty response when NoContentApiResponse class is handled.
+     *
+     * @return void
+     *
+     * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
+     * @throws \Exception
+     */
+    public function testNoContentResponse(): void
+    {
+        $psr7Factory = new Psr7Factory();
+
+        // Irrelevant - Will not be used
+        $encoderGuesser = new EncoderGuesser([JsonEncoder::class => ['application/json']]);
+        $request = $this->getRequest();
+        $emptyResponse = new NoContentApiResponse();
+
+        $next = function (Request $request) use ($emptyResponse) {
+            return $emptyResponse;
+        };
+
+        $response = (new ApiFormatsMiddleware($encoderGuesser, $psr7Factory))->handle($request, $next);
+        self::assertEmpty($response->getContent());
+        self::assertEquals(204, $response->getStatusCode());
     }
 
     /**
