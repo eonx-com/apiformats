@@ -45,15 +45,13 @@ class XmlEncoder extends AbstractEncoder
      */
     public function encode($data, ?int $statusCode = null, ?array $headers = null): ResponseInterface
     {
-        if ($data instanceof SerializableInterface) {
-            $data = $data->toArray();
-        }
+        $data = $this->getDataAsArray($data);
 
         if ($this->isCollection($data)) {
             $data = $this->collectionToArray($data);
         }
 
-        return $this->response($this->xmlConverter->arrayToXml((array)$data) ?? '', $statusCode, $headers);
+        return $this->response($this->xmlConverter->arrayToXml($data) ?? '', $statusCode, $headers);
     }
 
     /**
@@ -94,7 +92,7 @@ class XmlEncoder extends AbstractEncoder
         $array = [];
 
         foreach ($data as $item) {
-            $array[] = $item instanceof SerializableInterface ? $item->toArray() : (array)$item;
+            $array[] = $this->getDataAsArray($item);
         }
 
         return [$this->getResourceKey($data) => $array];

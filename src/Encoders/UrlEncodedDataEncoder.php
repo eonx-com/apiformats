@@ -22,11 +22,7 @@ class UrlEncodedDataEncoder extends AbstractEncoder
      */
     public function encode($data, ?int $statusCode = null, ?array $headers = null): ResponseInterface
     {
-        if ($data instanceof SerializableInterface) {
-            $data = $data->toArray();
-        }
-
-        return $this->response(\rawurlencode(\http_build_query((array)$data)), $statusCode, $headers);
+        return $this->response(\rawurlencode(\http_build_query($this->getDataAsArray($data))), $statusCode, $headers);
     }
 
     /**

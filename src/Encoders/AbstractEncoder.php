@@ -89,6 +89,32 @@ abstract class AbstractEncoder implements EncoderInterface
     abstract protected function getContentTypeHeader(): string;
 
     /**
+     * Get array representation of given data.
+     *
+     * @param mixed $data
+     *
+     * @return mixed[]
+     */
+    protected function getDataAsArray($data): array
+    {
+        // Skip if data already array
+        if (\is_array($data)) {
+            return $data;
+        }
+        // If defines toResponseArray return value
+        if (\method_exists($data, 'toResponseArray')) {
+            return $data->toResponseArray();
+        }
+        // If serializable interface return toArray
+        if ($data instanceof SerializableInterface) {
+            return $data->toArray();
+        }
+
+        // Finally, return cast as array
+        return (array)$data;
+    }
+
+    /**
      * Get resource key for given data.
      *
      * @param mixed $data
