@@ -152,12 +152,8 @@ class JsonApiEncoder extends AbstractEncoder
         }
 
         // Fallback to generic closure
-        return function ($data) {
-            if ($data instanceof SerializableInterface) {
-                return $data->toArray();
-            }
-
-            return (array)$data;
+        return function ($data): array {
+            return $this->getDataAsArray($data);
         };
     }
 
@@ -170,9 +166,7 @@ class JsonApiEncoder extends AbstractEncoder
      */
     private function isEmpty($data): bool
     {
-        // Empty array or object to array is empty
-        return (\is_array($data) && empty($data)) ||
-            ($data instanceof SerializableInterface && empty($data->toArray()));
+        return empty($this->getDataAsArray($data));
     }
 
     /**

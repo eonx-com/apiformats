@@ -22,11 +22,7 @@ class JsonEncoder extends AbstractEncoder
      */
     public function encode($data, ?int $statusCode = null, ?array $headers = null): ResponseInterface
     {
-        if ($data instanceof SerializableInterface) {
-            $data = $data->toArray();
-        }
-
-        return $this->response(\json_encode((array)$data), $statusCode, $headers);
+        return $this->response(\json_encode($this->getDataAsArray($data)), $statusCode, $headers);
     }
 
     /**
