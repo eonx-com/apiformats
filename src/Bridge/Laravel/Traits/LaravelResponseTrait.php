@@ -39,6 +39,9 @@ trait LaravelResponseTrait
 
         $symfonyResponse = $this->psr7Factory->createResponse($response);
 
+        // Remove content-length header as contents can change when Laravel creates response
+        $symfonyResponse->headers->remove('content-length');
+
         return Response::create(
             $symfonyResponse->getContent(),
             $symfonyResponse->getStatusCode(),
