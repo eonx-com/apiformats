@@ -89,18 +89,23 @@ abstract class AbstractEncoder implements EncoderInterface
     abstract protected function getContentTypeHeader(): string;
 
     /**
-     * Get array representation of given data.
+     * Get array representation of given data (recursively).
      *
-     * @param mixed $data
+     * @param mixed $data Data to convert to array
+     * @param bool|null $isRoot Used to determine if return must be cast as array, cast only at root level
      *
-     * @return mixed[]
+     * @return mixed
      */
-    protected function getDataAsArray($data): array
+    protected function getDataAsArray($data, ?bool $isRoot = null)
     {
-        // Skip if data already array
-        if (\is_array($data)) {
-            return $data;
+        // If given data not array and doesn't have any method to be converted to array, return cast
+        if (\is_array($data) === false
+            && ($data instanceof SerializableInterface) === false
+            && \method_exists($data, 'toResponseArray') === false) {
+            // Cast only if root level to preserve arrays structure, like string[] or int[]
+            return ($isRoot ?? true) ? (array)$data : $data;
         }
+
         // If defines toResponseArray return value
         if (\method_exists($data, 'toResponseArray')) {
             return $data->toResponseArray();
@@ -110,8 +115,15 @@ abstract class AbstractEncoder implements EncoderInterface
             return $data->toArray();
         }
 
+        // At this point we know it's an array
+        $return = [];
+        // We process it recursively
+        foreach ($data as $key => $value) {
+            $return[$key] = $this->getDataAsArray($value, false);
+        }
+
         // Finally, return cast as array
-        return (array)$data;
+        return $return;
     }
 
     /**
@@ -153,7 +165,16 @@ abstract class AbstractEncoder implements EncoderInterface
      */
     protected function isCollection(array $data): bool
     {
-        return \is_int(\key($data)) && (\is_array(\reset($data)) || \reset($data) instanceof SerializableInterface);
+        // If key is not a integer, it means it's an associative array
+        if (\is_int(\key($data)) === false) {
+            return false;
+        }
+
+        $first = \reset($data);
+
+        return \is_array($first)
+            || $first instanceof SerializableInterface
+            || \method_exists($first, 'toResponseArray');
     }
 
     /**
