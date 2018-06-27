@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace EoneoPay\ApiFormats\Encoders;
 
-use EoneoPay\Utils\Interfaces\SerializableInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class JsonEncoder extends AbstractEncoder

@@ -34,13 +34,15 @@ class EncoderGuesser implements EncoderGuesserInterface
     private $mimeTypes = [];
 
     /**
-     * RequestFormatGuesser constructor.
+     * EncoderGuesser constructor.
      *
      * @param mixed[] $formats
+     * @param null|string $defaultEncoder
      */
-    public function __construct(array $formats)
+    public function __construct(array $formats, ?string $defaultEncoder = null)
     {
         $this->formats = $formats;
+        $this->defaultEncoder = $defaultEncoder ?? JsonEncoder::class;
     }
 
     /**
@@ -49,10 +51,12 @@ class EncoderGuesser implements EncoderGuesserInterface
      * @param null|\Psr\Http\Message\ServerRequestInterface $request
      *
      * @return \EoneoPay\ApiFormats\Interfaces\EncoderInterface
+     *
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
      */
     public function defaultEncoder(?ServerRequestInterface $request = null): EncoderInterface
     {
-        return new JsonEncoder($request);
+        return $this->instantiateEncoder($this->defaultEncoder, $request);
     }
 
     /**
@@ -75,14 +79,13 @@ class EncoderGuesser implements EncoderGuesserInterface
         // Try to guess using headers
         foreach ($headers ?? static::$headers as $headerName) {
             $header = $request->getHeader($headerName);
+            $mimeType = (string)\reset($header);
 
             // Skip if header not set
-            if (empty($header) || \reset($header) === '*/*') {
+            if (empty($header) || $mimeType === '*/*' || $mimeType === '') {
                 continue;
             }
 
-            // Retrieve MIME type from request header
-            $mimeType = (string)\reset($header);
             // Get encoder class to use
             $encoderClass = $this->getEncoderClass($mimeType);
 
@@ -178,13 +181,13 @@ class EncoderGuesser implements EncoderGuesserInterface
      * Instantiate the encoder based on the class and the request.
      *
      * @param string $encoderClass
-     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param null|\Psr\Http\Message\ServerRequestInterface $request
      *
      * @return \EoneoPay\ApiFormats\Interfaces\EncoderInterface
      *
      * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
      */
-    private function instantiateEncoder(string $encoderClass, ServerRequestInterface $request): EncoderInterface
+    private function instantiateEncoder(string $encoderClass, ?ServerRequestInterface $request = null): EncoderInterface
     {
         if (\class_exists($encoderClass) === false) {
             throw new InvalidEncoderException(\sprintf('Encoder "%s" does not exist', $encoderClass));
@@ -213,10 +216,6 @@ class EncoderGuesser implements EncoderGuesserInterface
     private function setMimeTypes(array $formats): void
     {
         foreach ($formats as $encoder => $mimeTypes) {
-            if ($this->defaultEncoder === null) {
-                $this->defaultEncoder = $encoder;
-            }
-
             /** @var array $mimeTypes */
             foreach ($mimeTypes as $mimeType) {
                 $this->mimeTypes[$mimeType] = $encoder;

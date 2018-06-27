@@ -8,5 +8,5 @@ use EoneoPay\Utils\Exceptions\CriticalException;
 
 class InvalidSupportedRequestFormatsConfigException extends CriticalException implements ApiFormatsExceptionInterface
 {
-
+    // Exception for invalid formats configuration
 }
