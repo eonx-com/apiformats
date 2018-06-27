@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace EoneoPay\ApiFormats\Encoders;
 
-use EoneoPay\Utils\Interfaces\SerializableInterface;
 use EoneoPay\Utils\Interfaces\XmlConverterInterface;
 use EoneoPay\Utils\XmlConverter;
 use Psr\Http\Message\ResponseInterface;

@@ -29,7 +29,6 @@ class ApiFormatsServiceProvider extends ServiceProvider implements ApiFormatsSer
      *
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      */
     public function register(): void
     {
@@ -47,12 +46,16 @@ class ApiFormatsServiceProvider extends ServiceProvider implements ApiFormatsSer
      *
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      */
     private function getRequestEncoderGuesserClosure(): \Closure
     {
-        return function () {
-            return new EncoderGuesser($this->app->get('config')->get('api-formats.formats', []));
+        return function (): EncoderGuesser {
+            $config = $this->app->get('config');
+
+            return new EncoderGuesser(
+                $config->get('api-formats.formats', []),
+                $config->get('api-formats.default', null)
+            );
         };
     }
 }
