@@ -11,6 +11,8 @@ use EoneoPay\ApiFormats\External\Interfaces\Psr7\Psr7FactoryInterface;
 use EoneoPay\ApiFormats\Interfaces\EncoderGuesserInterface;
 use EoneoPay\ApiFormats\Interfaces\FormattedApiResponseInterface;
 use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -76,7 +78,9 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
             ));
         }
 
-        if ($response instanceof Response) {
+        if ($response instanceof Response
+            || $response instanceof JsonResponse
+            || $response instanceof RedirectResponse) {
             return $response;
         }
 
