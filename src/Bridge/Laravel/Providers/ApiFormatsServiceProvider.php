@@ -27,8 +27,7 @@ class ApiFormatsServiceProvider extends ServiceProvider implements ApiFormatsSer
     /**
      * Register api formats services.
      *
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \Psr\Container\ContainerExceptionInterface
+     * @return void
      */
     public function register(): void
     {
@@ -43,9 +42,6 @@ class ApiFormatsServiceProvider extends ServiceProvider implements ApiFormatsSer
      * Return closure to instantiate request encoder guesser.
      *
      * @return \Closure
-     *
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \Psr\Container\ContainerExceptionInterface
      */
     private function getRequestEncoderGuesserClosure(): \Closure
     {

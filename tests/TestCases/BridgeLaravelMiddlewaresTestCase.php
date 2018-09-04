@@ -18,9 +18,9 @@ abstract class BridgeLaravelMiddlewaresTestCase extends TestCase
      */
     protected function getRequest(?string $content = null, ?array $headers = null): Request
     {
-        $request = new Request([], [], [], [], [], [], $content);
+        $request = new Request([], [], [], [], [], ['HTTP_HOST' => 'eoneopay.com.au'], $content);
 
-        $headers = \array_merge($headers ?? [], ['X_ORIGINAL_URL' => 'https://eoneopay.com.au']);
+        $headers = \array_merge($headers ?? [], ['X_ORIGINAL_URL' => 'http://eoneopay.com.au']);
 
         foreach ($headers ?? [] as $header => $value) {
             $request->headers->set($header, $value);

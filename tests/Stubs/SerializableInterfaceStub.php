@@ -46,7 +46,7 @@ class SerializableInterfaceStub implements SerializableInterface
      */
     public function toJson(): string
     {
-        return \json_encode($this->jsonSerialize());
+        return \json_encode($this->jsonSerialize()) ?: '';
     }
 
     /**

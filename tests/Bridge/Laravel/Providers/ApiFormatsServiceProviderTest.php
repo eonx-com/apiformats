@@ -15,6 +15,8 @@ class ApiFormatsServiceProviderTest extends TestCase
 {
     /**
      * Provider should publish config on boot().
+     *
+     * @return void
      */
     public function testBoot(): void
     {
@@ -30,6 +32,8 @@ class ApiFormatsServiceProviderTest extends TestCase
 
     /**
      * Provider should register services on register().
+     *
+     * @return void
      */
     public function testRegister(): void
     {

@@ -107,7 +107,7 @@ abstract class AbstractEncoder implements EncoderInterface
         }
 
         // If defines toResponseArray return value
-        if (\method_exists($data, 'toResponseArray')) {
+        if (\is_object($data) && \method_exists($data, 'toResponseArray')) {
             return $data->toResponseArray();
         }
         // If serializable interface return toArray
@@ -115,15 +115,7 @@ abstract class AbstractEncoder implements EncoderInterface
             return $data->toArray();
         }
 
-        // At this point we know it's an array
-        $return = [];
-        // We process it recursively
-        foreach ($data as $key => $value) {
-            $return[$key] = $this->getDataAsArray($value, false);
-        }
-
-        // Finally, return cast as array
-        return $return;
+        return $this->processIterableObject($data);
     }
 
     /**
@@ -220,5 +212,28 @@ abstract class AbstractEncoder implements EncoderInterface
 
         // Guess resource key based on class name
         return Inflector::pluralize((new \ReflectionClass($serializable))->getShortName());
+    }
+
+    /**
+     * Recursively process iterable object
+     *
+     * @param mixed $data The data to process
+     *
+     * @return mixed[]
+     */
+    private function processIterableObject($data): array
+    {
+        // At this point we know it's an array
+        $return = [];
+
+        // We process it recursively
+        if (\is_iterable($data)) {
+            foreach ($data as $key => $value) {
+                $return[$key] = $this->getDataAsArray($value, false);
+            }
+        }
+
+        // Finally, return cast as array
+        return $return;
     }
 }
