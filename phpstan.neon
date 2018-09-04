@@ -2,5 +2,3 @@ parameters:
     ignoreErrors:
         - '#Constructor of class Tests\\EoneoPay\\ApiFormats\\Stubs\\EncoderWithoutInterface has an unused parameter \$request.#'
         - '#Parameter \#1 \$app of class EoneoPay\\ApiFormats\\Bridge\\Laravel\\Providers\\ApiFormatsServiceProvider constructor expects Illuminate\\Contracts\\Foundation\\Application, Laravel\\Lumen\\Application given.#'
-        - '#Call to an undefined method EoneoPay\\Utils\\Interfaces\\SerializableInterface::getResourceKey\(\).#'
-        - '#Call to an undefined method EoneoPay\\Utils\\Interfaces\\SerializableInterface::getTransformer\(\).#'

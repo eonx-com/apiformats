@@ -4,9 +4,23 @@ declare(strict_types=1);
 namespace EoneoPay\ApiFormats\Exceptions;
 
 use EoneoPay\ApiFormats\Interfaces\ApiFormatsExceptionInterface;
-use EoneoPay\Utils\Exceptions\CriticalException;
+use EoneoPay\Utils\Exceptions\RuntimeException;
 
-class InvalidSupportedRequestFormatsConfigException extends CriticalException implements ApiFormatsExceptionInterface
+class InvalidSupportedRequestFormatsConfigException extends RuntimeException implements ApiFormatsExceptionInterface
 {
-    // Exception for invalid formats configuration
+    /**
+     * {@inheritdoc}
+     */
+    public function getErrorCode(): int
+    {
+        return self::DEFAULT_ERROR_CODE_RUNTIME;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getErrorSubCode(): int
+    {
+        return self::DEFAULT_ERROR_SUB_CODE;
+    }
 }

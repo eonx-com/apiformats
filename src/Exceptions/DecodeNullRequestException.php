@@ -9,9 +9,7 @@ use EoneoPay\Utils\Exceptions\RuntimeException;
 class DecodeNullRequestException extends RuntimeException implements ApiFormatsExceptionInterface
 {
     /**
-     * Get Error code.
-     *
-     * @return int
+     * {@inheritdoc}
      */
     public function getErrorCode(): int
     {
@@ -19,9 +17,7 @@ class DecodeNullRequestException extends RuntimeException implements ApiFormatsE
     }
 
     /**
-     * Get Error sub-code.
-     *
-     * @return int
+     * {@inheritdoc}
      */
     public function getErrorSubCode(): int
     {

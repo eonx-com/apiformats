@@ -11,6 +11,8 @@ class UnsupportedRequestFormatExceptionTest extends BridgeLaravelExceptionsTestC
 {
     /**
      * Exception should return valid codes.
+     *
+     * @return void
      */
     public function testGettersFromBaseExceptionInterface(): void
     {
