@@ -42,6 +42,23 @@ class RequestEncodersTest extends RequestEncoderGuesserTestCase
     }
 
     /**
+     * Encoders::encodeError should return ResponseInterface.
+     *
+     * @return void
+     */
+    public function testEncodeErrorReturnsResponseInterface(): void
+    {
+        foreach (static::$encoders as $encoderClass) {
+            /** @var \EoneoPay\ApiFormats\Interfaces\EncoderInterface $encoder */
+            $encoder = new $encoderClass($this->getRequest());
+
+            foreach ($this->getEncodersTests() as $test) {
+                self::assertTrue(\is_subclass_of($encoder->encodeError($test), ResponseInterface::class));
+            }
+        }
+    }
+
+    /**
      * Encoders::encode should return ResponseInterface no matters the input.
      *
      * @return void

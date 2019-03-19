@@ -59,6 +59,25 @@ abstract class AbstractEncoder implements EncoderInterface
     }
 
     /**
+     * Create error response from given data, status code and headers.
+     *
+     * @param mixed $data
+     * @param int|null $statusCode
+     * @param string[]|null $headers
+     * @param string|null $errorKey
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function encodeError(
+        $data,
+        ?int $statusCode = null,
+        ?array $headers = null,
+        ?string $errorKey = null
+    ): ResponseInterface {
+        return $this->encode($data, $statusCode, $headers);
+    }
+
+    /**
      * Manually set content to decode.
      *
      * @param string $content
