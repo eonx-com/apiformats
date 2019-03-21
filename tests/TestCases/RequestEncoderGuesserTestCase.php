@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\EoneoPay\ApiFormats\TestCases;
 
 use PHPUnit\Framework\TestCase;
+use Tests\EoneoPay\ApiFormats\Stubs\CollectionInterfaceStub;
 use Tests\EoneoPay\ApiFormats\Stubs\SerializableInterfaceStub;
 use Tests\EoneoPay\ApiFormats\Stubs\SerializableInterfaceStubWithToResponseArray;
 use Tests\EoneoPay\ApiFormats\Stubs\SerializableInterfaceWithGettersStub;
@@ -19,6 +20,7 @@ abstract class RequestEncoderGuesserTestCase extends TestCase
     protected function getEncodersTests(): array
     {
         return [
+            new CollectionInterfaceStub(),
             new SerializableInterfaceStub(), // Single item
             new SerializableInterfaceWithGettersStub(), // Single item with getters
             (new SerializableInterfaceStub())->toArray(), // Single item as array

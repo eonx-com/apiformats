@@ -5,6 +5,7 @@ namespace EoneoPay\ApiFormats\Encoders;
 
 use EoneoPay\ApiFormats\External\Interfaces\JsonApi\JsonApiConverterInterface;
 use EoneoPay\ApiFormats\External\Libraries\JsonApi\JsonApiConverter;
+use EoneoPay\Utils\Interfaces\CollectionInterface;
 use EoneoPay\Utils\Interfaces\SerializableInterface;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
@@ -122,6 +123,11 @@ class JsonApiEncoder extends AbstractEncoder
      */
     private function getResourceClass($data): string
     {
+        // Check if collection first since CollectionInterface extends SerializableInterface
+        if ($data instanceof CollectionInterface) {
+            return Collection::class;
+        }
+
         // If single item as object
         if ($data instanceof SerializableInterface) {
             return Item::class;
