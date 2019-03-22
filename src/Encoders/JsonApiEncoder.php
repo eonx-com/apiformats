@@ -88,11 +88,7 @@ class JsonApiEncoder extends AbstractEncoder
             $errors = [$errors];
         }
 
-        return $this->response(
-            \json_encode(['errors' => $errors]) ?: '',
-            $statusCode,
-            $headers
-        );
+        return $this->response(\json_encode(['errors' => $errors]) ?: '', $statusCode, $headers);
     }
 
     /**
