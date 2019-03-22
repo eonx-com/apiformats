@@ -5,12 +5,14 @@ namespace EoneoPay\ApiFormats\Encoders;
 
 use EoneoPay\ApiFormats\External\Interfaces\JsonApi\JsonApiConverterInterface;
 use EoneoPay\ApiFormats\External\Libraries\JsonApi\JsonApiConverter;
+use EoneoPay\Utils\Interfaces\CollectionInterface;
 use EoneoPay\Utils\Interfaces\SerializableInterface;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\NullResource;
 use League\Fractal\Serializer\JsonApiSerializer;
+use League\Fractal\TransformerAbstract;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -142,6 +144,11 @@ class JsonApiEncoder extends AbstractEncoder
      */
     private function getResourceClass($data): string
     {
+        // Check if collection first since CollectionInterface extends SerializableInterface
+        if ($data instanceof CollectionInterface) {
+            return Collection::class;
+        }
+
         // If single item as object
         if ($data instanceof SerializableInterface) {
             return Item::class;
@@ -166,9 +173,13 @@ class JsonApiEncoder extends AbstractEncoder
     {
         // If data is an object and defines getTransformer method we use it
         if ($data instanceof SerializableInterface && \method_exists($data, 'getTransformer')) {
-            $transformerClass = $data->getTransformer();
+            $transformer = $data->getTransformer();
 
-            return new $transformerClass();
+            if ($transformer instanceof TransformerAbstract) {
+                return $transformer;
+            }
+
+            return new $transformer();
         }
 
         // Fallback to generic closure
