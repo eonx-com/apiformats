@@ -72,6 +72,26 @@ class JsonApiEncoder extends AbstractEncoder
     }
 
     /**
+     * Create error response from given data, status code and headers.
+     *
+     * @param mixed $data
+     * @param int|null $statusCode
+     * @param string[]|null $headers
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function encodeError($data, ?int $statusCode = null, ?array $headers = null): ResponseInterface
+    {
+        $errors = $this->getDataAsArray($data);
+
+        if ($this->isCollection($data) === false) {
+            $errors = [$errors];
+        }
+
+        return $this->response(\json_encode(['errors' => $errors]) ?: '', $statusCode, $headers);
+    }
+
+    /**
      * Decode request content to array.
      *
      * @param string $content

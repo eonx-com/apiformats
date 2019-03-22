@@ -26,6 +26,17 @@ interface EncoderInterface
     public function encode($data, ?int $statusCode = null, ?array $headers = null): ResponseInterface;
 
     /**
+     * Create error response from given data, status code and headers.
+     *
+     * @param mixed $data
+     * @param int|null $statusCode
+     * @param string[]|null $headers
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function encodeError($data, ?int $statusCode = null, ?array $headers = null): ResponseInterface;
+
+    /**
      * Manually set content to decode.
      *
      * @param string $content
