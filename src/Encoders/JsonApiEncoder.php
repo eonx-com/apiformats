@@ -12,6 +12,7 @@ use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\NullResource;
 use League\Fractal\Serializer\JsonApiSerializer;
+use League\Fractal\TransformerAbstract;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -152,9 +153,13 @@ class JsonApiEncoder extends AbstractEncoder
     {
         // If data is an object and defines getTransformer method we use it
         if ($data instanceof SerializableInterface && \method_exists($data, 'getTransformer')) {
-            $transformerClass = $data->getTransformer();
+            $transformer = $data->getTransformer();
 
-            return new $transformerClass();
+            if ($transformer instanceof TransformerAbstract) {
+                return $transformer;
+            }
+
+            return new $transformer();
         }
 
         // Fallback to generic closure
