@@ -53,6 +53,12 @@ class RequestEncodersTest extends RequestEncoderGuesserTestCase
             $encoder = new $encoderClass($this->getRequest());
 
             foreach ($this->getEncodersTests() as $test) {
+                if ($encoder instanceof JsonApiEncoder) {
+                    // Always encode errors as an array
+                    self::assertTrue(\is_subclass_of($encoder->encodeError([$test]), ResponseInterface::class));
+
+                    continue;
+                }
                 self::assertTrue(\is_subclass_of($encoder->encodeError($test), ResponseInterface::class));
             }
         }
