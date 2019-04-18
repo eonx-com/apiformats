@@ -94,9 +94,7 @@ class JsonApiHydrator implements JsonApiHydratorInterface
     {
         // This is only here for type safety, null is checked before calling method from hydrate()
         if ($resource === null) {
-            // @codeCoverageIgnoreStart
-            return [];
-            // @codeCoverageIgnoreEnd
+            return []; // @codeCoverageIgnore
         }
 
         // Fill basic attributes of the resource
@@ -112,7 +110,6 @@ class JsonApiHydrator implements JsonApiHydratorInterface
 
                 if ($object === null && $document->hasIncludedResource($link['type'], $link['id'])) {
                     $relatedResource = $document->resource($link['type'], $link['id']);
-
                     if ($relatedResource !== null) {
                         $object = $this->hydrateResource($relatedResource, $document, $resourceMap);
                     }

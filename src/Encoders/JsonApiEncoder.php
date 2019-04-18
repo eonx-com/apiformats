@@ -166,7 +166,7 @@ class JsonApiEncoder extends AbstractEncoder
      */
     private function isEmpty($data): bool
     {
-        return empty($this->getDataAsArray($data));
+        return \count($this->getDataAsArray($data)) === 0;
     }
 
     /**

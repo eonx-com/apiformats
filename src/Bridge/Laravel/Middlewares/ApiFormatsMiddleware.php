@@ -51,7 +51,7 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
      */
     public function handle(Request $request, Closure $next)
     {
-        $psr7Request = $this->psr7Factory->createRequest($request);
+        $psr7Request = $this->getPsr7Factory()->createRequest($request);
 
         try {
             $requestEncoder = $this->encoderGuesser->guessRequestEncoder($psr7Request);

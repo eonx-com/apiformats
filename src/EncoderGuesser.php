@@ -82,7 +82,7 @@ class EncoderGuesser implements EncoderGuesserInterface
             $mimeType = (string)\reset($header);
 
             // Skip if header not set
-            if (empty($header) || $mimeType === '*/*' || $mimeType === '') {
+            if ($mimeType === '*/*' || $mimeType === '' || \count($header) === 0) {
                 continue;
             }
 
@@ -147,7 +147,7 @@ class EncoderGuesser implements EncoderGuesserInterface
     private function getEncoderClass(string $requestMimeType): ?string
     {
         foreach ($this->mimeTypes as $mimeType => $encoderClass) {
-            if (\preg_match(\sprintf('#%s#i', $mimeType), $requestMimeType)) {
+            if (\preg_match(\sprintf('#%s#i', $mimeType), $requestMimeType) === 1) {
                 return $encoderClass;
             }
         }
@@ -234,7 +234,7 @@ class EncoderGuesser implements EncoderGuesserInterface
      */
     private function validateFormats(array $formats): void
     {
-        if (empty($formats)) {
+        if (\count($formats) === 0) {
             throw new InvalidSupportedRequestFormatsConfigException('No supported request formats configured');
         }
 

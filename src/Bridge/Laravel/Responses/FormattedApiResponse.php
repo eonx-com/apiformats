@@ -31,9 +31,7 @@ class FormattedApiResponse extends Response implements FormattedApiResponseInter
     }
 
     /**
-     * Get headers.
-     *
-     * @return mixed[]
+     * {@inheritdoc}
      */
     public function getHeaders(): array
     {

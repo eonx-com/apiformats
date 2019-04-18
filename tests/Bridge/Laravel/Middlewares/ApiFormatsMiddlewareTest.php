@@ -70,7 +70,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
         ];
 
         $middleware = new ApiFormatsMiddleware(new EncoderGuesser($formats), new Psr7Factory());
-        $next = function (Request $request) {
+        $next = static function (Request $request) {
             return $request->all();
         };
 
@@ -85,8 +85,9 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
 
             switch ($encoder) {
                 case JsonEncoder::class:
-                    self::assertEquals($test['content'], $response->getContent());
+                    self::assertSame($test['content'], $response->getContent());
                     break;
+
                 case XmlEncoder::class:
                     self::assertXmlStringEqualsXmlString($test['content'], $response->getContent());
                     break;

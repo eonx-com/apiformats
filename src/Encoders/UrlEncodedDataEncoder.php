@@ -35,7 +35,7 @@ class UrlEncodedDataEncoder extends AbstractEncoder
     {
         \parse_str($content, $decoded);
 
-        return \count($decoded) ? $decoded : [];
+        return \count($decoded) > 0 ? $decoded : [];
     }
 
     /**

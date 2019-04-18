@@ -49,7 +49,7 @@ abstract class AbstractEncoder implements EncoderInterface
             throw new DecodeNullRequestException('Request must be set to decode content');
         }
 
-        $content = $this->content ?? ($this->request ? $this->request->getBody()->getContents() : '');
+        $content = $this->content ?? ($this->request !== null ? $this->request->getBody()->getContents() : '');
 
         if ($content === '') {
             return [];

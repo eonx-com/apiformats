@@ -1,5 +1,15 @@
+includes:
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
 parameters:
     ignoreErrors:
-        - '#Constructor of class Tests\\EoneoPay\\ApiFormats\\Stubs\\EncoderWithoutInterface has an unused parameter \$request.#'
-        - '#Parameter \#1 \$app of class EoneoPay\\ApiFormats\\Bridge\\Laravel\\Providers\\ApiFormatsServiceProvider constructor expects Illuminate\\Contracts\\Foundation\\Application, Laravel\\Lumen\\Application given.#'
-        - '#Strict comparison using === between true and false will always evaluate to false.#'
+        -
+            message: '#Constant XDEBUG_[A-Z_]+ not found.#'
+            path: tests/bootstrap.php
+        -
+            message: '#Constructor of class Tests\\EoneoPay\\ApiFormats\\Stubs\\EncoderWithoutInterface has an unused parameter \$request.#'
+            path: tests/Stubs/EncoderWithoutInterface.php
+        -
+            message: '#Parameter \#1 \$app of class EoneoPay\\ApiFormats\\Bridge\\Laravel\\Providers\\ApiFormatsServiceProvider constructor expects Illuminate\\Contracts\\Foundation\\Application, Laravel\\Lumen\\Application given.#'
+            path: tests/Bridge/Laravel/Providers/ApiFormatsServiceProviderTest.php
