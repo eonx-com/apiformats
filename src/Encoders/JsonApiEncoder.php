@@ -5,12 +5,14 @@ namespace EoneoPay\ApiFormats\Encoders;
 
 use EoneoPay\ApiFormats\External\Interfaces\JsonApi\JsonApiConverterInterface;
 use EoneoPay\ApiFormats\External\Libraries\JsonApi\JsonApiConverter;
+use EoneoPay\Utils\Interfaces\CollectionInterface;
 use EoneoPay\Utils\Interfaces\SerializableInterface;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\NullResource;
 use League\Fractal\Serializer\JsonApiSerializer;
+use League\Fractal\TransformerAbstract;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -72,6 +74,22 @@ class JsonApiEncoder extends AbstractEncoder
     }
 
     /**
+     * @noinspection PhpMissingParentCallCommonInspection Parent intentionally bypassed
+     *
+     * {@inheritdoc}
+     */
+    public function encodeError($data, ?int $statusCode = null, ?array $headers = null): ResponseInterface
+    {
+        $errors = $this->getDataAsArray($data);
+
+        if ($this->isCollection($data) === false) {
+            $errors = [$errors];
+        }
+
+        return $this->response(\json_encode(['errors' => $errors]) ?: '', $statusCode, $headers);
+    }
+
+    /**
      * Decode request content to array.
      *
      * @param string $content
@@ -122,17 +140,17 @@ class JsonApiEncoder extends AbstractEncoder
      */
     private function getResourceClass($data): string
     {
+        // Check if collection first since CollectionInterface extends SerializableInterface
+        if (($data instanceof CollectionInterface) === true) {
+            return Collection::class;
+        }
+
         // If single item as object
         if (($data instanceof SerializableInterface) === true) {
             return Item::class;
         }
 
-        $data = (array)$data;
-        if ($this->isCollection($data)) {
-            return Collection::class;
-        }
-
-        return Item::class;
+        return $this->isCollection((array)$data) ? Collection::class : Item::class;
     }
 
     /**
@@ -145,10 +163,15 @@ class JsonApiEncoder extends AbstractEncoder
     private function getTransformer($data)
     {
         // If data is an object and defines getTransformer method we use it
-        if (($data instanceof SerializableInterface) === true && \method_exists($data, 'getTransformer')) {
-            $transformerClass = $data->getTransformer();
+        $getTransformer = [$data, 'getTransformer'];
+        if (($data instanceof SerializableInterface) === true && \is_callable($getTransformer) === true) {
+            $transformer = $getTransformer();
 
-            return new $transformerClass();
+            if (($transformer instanceof TransformerAbstract) === true) {
+                return $transformer;
+            }
+
+            return new $transformer();
         }
 
         // Fallback to generic closure
