@@ -6,12 +6,16 @@ namespace EoneoPay\ApiFormats\External\Libraries\Psr7;
 use EoneoPay\ApiFormats\External\Interfaces\Psr7\Psr7FactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
+use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Zend\Diactoros\ResponseFactory;
+use Zend\Diactoros\ServerRequestFactory;
+use Zend\Diactoros\StreamFactory;
+use Zend\Diactoros\UploadedFileFactory;
 
 class Psr7Factory implements Psr7FactoryInterface
 {
@@ -35,8 +39,18 @@ class Psr7Factory implements Psr7FactoryInterface
         ?HttpFoundationFactoryInterface $httpFoundation = null,
         ?HttpMessageFactoryInterface $httpMessage = null
     ) {
+        // If http message isn't defined, use factory
+        if (($httpMessage instanceof HttpMessageFactoryInterface) === false) {
+            $httpMessage = new PsrHttpFactory(
+                new ServerRequestFactory(),
+                new StreamFactory(),
+                new UploadedFileFactory(),
+                new ResponseFactory()
+            );
+        }
+
         $this->httpFoundation = $httpFoundation ?? new HttpFoundationFactory();
-        $this->httpMessage = $httpMessage ?? new DiactorosFactory();
+        $this->httpMessage = $httpMessage;
     }
 
     /**

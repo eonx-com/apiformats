@@ -123,7 +123,7 @@ class JsonApiEncoder extends AbstractEncoder
     private function getResourceClass($data): string
     {
         // If single item as object
-        if ($data instanceof SerializableInterface) {
+        if (($data instanceof SerializableInterface) === true) {
             return Item::class;
         }
 
@@ -145,7 +145,7 @@ class JsonApiEncoder extends AbstractEncoder
     private function getTransformer($data)
     {
         // If data is an object and defines getTransformer method we use it
-        if ($data instanceof SerializableInterface && \method_exists($data, 'getTransformer')) {
+        if (($data instanceof SerializableInterface) === true && \method_exists($data, 'getTransformer')) {
             $transformerClass = $data->getTransformer();
 
             return new $transformerClass();

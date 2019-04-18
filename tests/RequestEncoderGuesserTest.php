@@ -19,6 +19,8 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
      * Encoder should throw exception when trying to decode on null request.
      *
      * @return void
+     *
+     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
      */
     public function testDecodeNullRequestException(): void
     {

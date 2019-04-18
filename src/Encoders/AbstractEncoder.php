@@ -9,6 +9,7 @@ use EoneoPay\ApiFormats\Interfaces\EncoderInterface;
 use EoneoPay\Utils\Interfaces\SerializableInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use ReflectionClass;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Stream;
 
@@ -98,21 +99,16 @@ abstract class AbstractEncoder implements EncoderInterface
      */
     protected function getDataAsArray($data, ?bool $isRoot = null)
     {
-        // If given data not array and doesn't have any method to be converted to array, return cast
-        if (\is_array($data) === false
-            && ($data instanceof SerializableInterface) === false
-            && \method_exists($data, 'toResponseArray') === false) {
-            // Cast only if root level to preserve arrays structure, like string[] or int[]
-            return ($isRoot ?? true) ? (array)$data : $data;
+        $toResponseArray = [$data, 'toResponseArray'];
+        // If this is serialisable or implements to response array, call it
+        if (($data instanceof SerializableInterface) === true || \is_callable($toResponseArray) === true) {
+            return \is_callable($toResponseArray) === true ? $toResponseArray() : $data->toArray();
         }
 
-        // If defines toResponseArray return value
-        if (\is_object($data) && \method_exists($data, 'toResponseArray')) {
-            return $data->toResponseArray();
-        }
-        // If serializable interface return toArray
-        if ($data instanceof SerializableInterface) {
-            return $data->toArray();
+        // If given data is not iterable, cast result
+        if (\is_iterable($data) === false) {
+            // Cast only if root level to preserve arrays structure, like string[] or int[]
+            return ($isRoot ?? true) ? (array)$data : $data;
         }
 
         return $this->processIterableObject($data);
@@ -130,7 +126,7 @@ abstract class AbstractEncoder implements EncoderInterface
     protected function getResourceKey($data): string
     {
         // If single item as object
-        if ($data instanceof SerializableInterface) {
+        if (($data instanceof SerializableInterface) === true) {
             return $this->getResourceKeyForSerializable($data);
         }
 
@@ -138,7 +134,7 @@ abstract class AbstractEncoder implements EncoderInterface
         if ($this->isCollection($data)) {
             foreach ($data as $item) {
                 // Set resource key as first object plural name found
-                if ($item instanceof SerializableInterface) {
+                if (($item instanceof SerializableInterface) === true) {
                     return $this->getResourceKeyForSerializable($item);
                 }
             }
@@ -165,7 +161,7 @@ abstract class AbstractEncoder implements EncoderInterface
         $first = \reset($data);
 
         return \is_array($first)
-            || $first instanceof SerializableInterface
+            || ($first instanceof SerializableInterface) === true
             || \method_exists($first, 'toResponseArray');
     }
 
@@ -207,11 +203,11 @@ abstract class AbstractEncoder implements EncoderInterface
     {
         // If serializable defines resource key itself, return it
         if (\method_exists($serializable, 'getResourceKey')) {
-            return $serializable->getResourceKey();
+            return (string)$serializable->getResourceKey();
         }
 
         // Guess resource key based on class name
-        return Inflector::pluralize((new \ReflectionClass($serializable))->getShortName());
+        return Inflector::pluralize((new ReflectionClass($serializable))->getShortName());
     }
 
     /**

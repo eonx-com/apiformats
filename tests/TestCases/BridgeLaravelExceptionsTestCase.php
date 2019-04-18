@@ -24,8 +24,8 @@ abstract class BridgeLaravelExceptionsTestCase extends TestCase
         int $errorSubCode,
         int $statusCode
     ): void {
-        self::assertEquals($errorCode, $exception->getErrorCode());
-        self::assertEquals($errorSubCode, $exception->getErrorSubCode());
-        self::assertEquals($statusCode, $exception->getStatusCode());
+        self::assertSame($errorCode, $exception->getErrorCode());
+        self::assertSame($errorSubCode, $exception->getErrorSubCode());
+        self::assertSame($statusCode, $exception->getStatusCode());
     }
 }

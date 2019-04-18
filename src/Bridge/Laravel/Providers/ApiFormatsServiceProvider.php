@@ -12,6 +12,11 @@ use Illuminate\Support\ServiceProvider;
 
 class ApiFormatsServiceProvider extends ServiceProvider implements ApiFormatsServiceProviderInterface
 {
+    /**
+     * Path to the config file relative to the vendor directory
+     *
+     * @const string
+     */
     public const CONFIG_PATH = __DIR__ . '/../config/api-formats.php';
 
     /**
@@ -25,9 +30,9 @@ class ApiFormatsServiceProvider extends ServiceProvider implements ApiFormatsSer
     }
 
     /**
-     * Register api formats services.
+     * @noinspection PhpMissingParentCallCommonInspection Parent implementation is empty
      *
-     * @return void
+     * {@inheritdoc}
      */
     public function register(): void
     {

@@ -27,9 +27,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
      * @return void
      *
      * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
-     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
-     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
-     * @throws \Exception
+     * @throws \EoneoPay\ApiFormats\Exceptions\ApiFormatterException
      */
     public function testDefaultEncoderOnRequestIfException(): void
     {
@@ -52,9 +50,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
      * @return void
      *
      * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
-     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
-     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
-     * @throws \Exception
+     * @throws \EoneoPay\ApiFormats\Exceptions\ApiFormatterException
      */
     public function testHandleFormatsProperly(): void
     {
@@ -81,7 +77,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
             self::assertInstanceOf($encoder, $request->attributes->get('_encoder'));
             self::assertInstanceOf(Response::class, $response);
             /** @var \Illuminate\Http\Response $response */
-            self::assertEquals($test['mime_type'], $response->headers->get('Content-Type'));
+            self::assertSame($test['mime_type'], $response->headers->get('Content-Type'));
 
             switch ($encoder) {
                 case JsonEncoder::class:
@@ -101,7 +97,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
      * @return void
      *
      * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
-     * @throws \Exception
+     * @throws \EoneoPay\ApiFormats\Exceptions\ApiFormatterException
      */
     public function testNoContentResponse(): void
     {
@@ -112,13 +108,13 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
         $request = $this->getRequest();
         $emptyResponse = new NoContentApiResponse();
 
-        $next = function (Request $request) use ($emptyResponse) {
+        $next = static function (Request $request) use ($emptyResponse) {
             return $emptyResponse;
         };
 
         $response = (new ApiFormatsMiddleware($encoderGuesser, $psr7Factory))->handle($request, $next);
         self::assertEmpty($response->getContent());
-        self::assertEquals(204, $response->getStatusCode());
+        self::assertSame(204, $response->getStatusCode());
     }
 
     /**
@@ -127,9 +123,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
      * @return void
      *
      * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
-     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
-     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
-     * @throws \Exception
+     * @throws \EoneoPay\ApiFormats\Exceptions\ApiFormatterException
      */
     public function testReturnDirectlyResponseIfAlreadyLaravelOne(): void
     {
@@ -138,13 +132,13 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
         $request = $this->getRequest();
         $laravelResponse = new Response();
 
-        $next = function (Request $request) use ($laravelResponse) {
+        $next = static function (Request $request) use ($laravelResponse) {
             return $laravelResponse;
         };
 
         $response = (new ApiFormatsMiddleware($encoderGuesser, $psr7Factory))->handle($request, $next);
 
-        self::assertEquals(\spl_object_hash($laravelResponse), \spl_object_hash($response));
+        self::assertSame(\spl_object_hash($laravelResponse), \spl_object_hash($response));
     }
 
     /**
@@ -154,9 +148,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
      * @return void
      *
      * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
-     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
-     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
-     * @throws \Exception
+     * @throws \EoneoPay\ApiFormats\Exceptions\ApiFormatterException
      */
     public function testReturnRightFormattedResponseIfFormattedApiResponse(): void
     {
@@ -169,16 +161,16 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
             ['X-CUSTOM-HEADER' => 'custom']
         );
 
-        $next = function (Request $request) use ($formattedApiResponse) {
+        $next = static function (Request $request) use ($formattedApiResponse) {
             return $formattedApiResponse;
         };
 
         $response = (new ApiFormatsMiddleware($encoderGuesser, $psr7Factory))->handle($request, $next);
 
-        self::assertEquals(\json_encode($formattedApiResponse->getContent()), $response->getContent());
-        self::assertEquals($formattedApiResponse->getStatusCode(), $response->getStatusCode());
+        self::assertSame(\json_encode($formattedApiResponse->getContent()), $response->getContent());
+        self::assertSame($formattedApiResponse->getStatusCode(), $response->getStatusCode());
         self::assertTrue($response->headers->has('X-CUSTOM-HEADER'));
-        self::assertEquals('custom', $response->headers->get('X-CUSTOM-HEADER'));
+        self::assertSame('custom', $response->headers->get('X-CUSTOM-HEADER'));
     }
 
     /**
@@ -188,9 +180,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
      * @return void
      *
      * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
-     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
-     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
-     * @throws \Exception
+     * @throws \EoneoPay\ApiFormats\Exceptions\ApiFormatterException
      */
     public function testReturnRightFormattedResponseIfFormattedApiResponseWithSerializableInterface(): void
     {
@@ -203,15 +193,15 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
             ['X-CUSTOM-HEADER' => 'custom']
         );
 
-        $next = function (Request $request) use ($formattedApiResponse) {
+        $next = static function (Request $request) use ($formattedApiResponse) {
             return $formattedApiResponse;
         };
 
         $response = (new ApiFormatsMiddleware($encoderGuesser, $psr7Factory))->handle($request, $next);
 
-        self::assertEquals(\json_encode($formattedApiResponse->getContent()), $response->getContent());
-        self::assertEquals($formattedApiResponse->getStatusCode(), $response->getStatusCode());
+        self::assertSame(\json_encode($formattedApiResponse->getContent()), $response->getContent());
+        self::assertSame($formattedApiResponse->getStatusCode(), $response->getStatusCode());
         self::assertTrue($response->headers->has('X-CUSTOM-HEADER'));
-        self::assertEquals('custom', $response->headers->get('X-CUSTOM-HEADER'));
+        self::assertSame('custom', $response->headers->get('X-CUSTOM-HEADER'));
     }
 }

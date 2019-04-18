@@ -23,10 +23,6 @@ interface EncoderGuesserInterface
      * @param null|string[] $headers
      *
      * @return \EoneoPay\ApiFormats\Interfaces\EncoderInterface
-     *
-     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
-     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
-     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      */
     public function guessEncoder(ServerRequestInterface $request, ?array $headers = null): EncoderInterface;
 
@@ -36,10 +32,6 @@ interface EncoderGuesserInterface
      * @param \Psr\Http\Message\ServerRequestInterface $request
      *
      * @return \EoneoPay\ApiFormats\Interfaces\EncoderInterface
-     *
-     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
-     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
-     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      */
     public function guessRequestEncoder(ServerRequestInterface $request): EncoderInterface;
 
@@ -49,10 +41,6 @@ interface EncoderGuesserInterface
      * @param \Psr\Http\Message\ServerRequestInterface $request
      *
      * @return \EoneoPay\ApiFormats\Interfaces\EncoderInterface
-     *
-     * @throws \EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException
-     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidEncoderException
-     * @throws \EoneoPay\ApiFormats\Exceptions\InvalidSupportedRequestFormatsConfigException
      */
     public function guessResponseEncoder(ServerRequestInterface $request): EncoderInterface;
 }
