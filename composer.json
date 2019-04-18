@@ -15,8 +15,8 @@
     "ext-json": "*",
     "league/fractal": "^0.17.0",
     "symfony/psr-http-message-bridge": "^1.0",
-    "zendframework/zend-diactoros": "^2.1",
-    "woohoolabs/yang": "^1.4"
+    "woohoolabs/yang": "^1.4",
+    "zendframework/zend-diactoros": "^2.1"
   },
   "require-dev": {
     "eoneopay/standards": "dev-master",
