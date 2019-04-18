@@ -12,6 +12,6 @@ class SerializableInterfaceStubWithToResponseArray extends SerializableInterface
      */
     public function toResponseArray(): array
     {
-        return parent::toArray();
+        return $this->toArray();
     }
 }

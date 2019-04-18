@@ -23,7 +23,7 @@ abstract class BridgeLaravelMiddlewaresTestCase extends TestCase
         $headers = \array_merge($headers ?? [], ['X_ORIGINAL_URL' => 'http://eoneopay.com.au']);
 
         foreach ($headers ?? [] as $header => $value) {
-            $request->headers->set($header, $value);
+            $request->headers->set((string)$header, $value);
         }
 
         $request->setMethod(Request::METHOD_POST);

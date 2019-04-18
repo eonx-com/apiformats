@@ -3,24 +3,6 @@ declare(strict_types=1);
 
 namespace EoneoPay\ApiFormats\Exceptions;
 
-use EoneoPay\ApiFormats\Interfaces\ApiFormatsExceptionInterface;
-use EoneoPay\Utils\Exceptions\RuntimeException;
-
-class InvalidEncoderException extends RuntimeException implements ApiFormatsExceptionInterface
+final class InvalidEncoderException extends ApiFormatterException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getErrorCode(): int
-    {
-        return self::DEFAULT_ERROR_CODE_RUNTIME;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getErrorSubCode(): int
-    {
-        return self::DEFAULT_ERROR_SUB_CODE;
-    }
 }

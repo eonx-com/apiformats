@@ -74,13 +74,9 @@ class JsonApiEncoder extends AbstractEncoder
     }
 
     /**
-     * Create error response from given data, status code and headers.
+     * @noinspection PhpMissingParentCallCommonInspection Parent intentionally bypassed
      *
-     * @param mixed $data
-     * @param int|null $statusCode
-     * @param string[]|null $headers
-     *
-     * @return \Psr\Http\Message\ResponseInterface
+     * {@inheritdoc}
      */
     public function encodeError($data, ?int $statusCode = null, ?array $headers = null): ResponseInterface
     {
@@ -145,21 +141,16 @@ class JsonApiEncoder extends AbstractEncoder
     private function getResourceClass($data): string
     {
         // Check if collection first since CollectionInterface extends SerializableInterface
-        if ($data instanceof CollectionInterface) {
+        if (($data instanceof CollectionInterface) === true) {
             return Collection::class;
         }
 
         // If single item as object
-        if ($data instanceof SerializableInterface) {
+        if (($data instanceof SerializableInterface) === true) {
             return Item::class;
         }
 
-        $data = (array)$data;
-        if ($this->isCollection($data)) {
-            return Collection::class;
-        }
-
-        return Item::class;
+        return $this->isCollection((array)$data) ? Collection::class : Item::class;
     }
 
     /**
@@ -172,10 +163,11 @@ class JsonApiEncoder extends AbstractEncoder
     private function getTransformer($data)
     {
         // If data is an object and defines getTransformer method we use it
-        if ($data instanceof SerializableInterface && \method_exists($data, 'getTransformer')) {
-            $transformer = $data->getTransformer();
+        $getTransformer = [$data, 'getTransformer'];
+        if (($data instanceof SerializableInterface) === true && \is_callable($getTransformer) === true) {
+            $transformer = $getTransformer();
 
-            if ($transformer instanceof TransformerAbstract) {
+            if (($transformer instanceof TransformerAbstract) === true) {
                 return $transformer;
             }
 
@@ -197,7 +189,7 @@ class JsonApiEncoder extends AbstractEncoder
      */
     private function isEmpty($data): bool
     {
-        return empty($this->getDataAsArray($data));
+        return \count($this->getDataAsArray($data)) === 0;
     }
 
     /**

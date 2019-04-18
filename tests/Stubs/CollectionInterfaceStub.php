@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Tests\EoneoPay\ApiFormats\Stubs;
 
+use ArrayIterator;
 use EoneoPay\Utils\Interfaces\CollectionInterface;
 use EoneoPay\Utils\Interfaces\SerializableInterface;
+use Iterator;
 
 /**
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity) Collection is massive and requires all functionality
@@ -14,9 +16,7 @@ use EoneoPay\Utils\Interfaces\SerializableInterface;
 final class CollectionInterfaceStub implements CollectionInterface
 {
     /**
-     * Convert collection to string
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function __toString(): string
     {
@@ -24,11 +24,7 @@ final class CollectionInterfaceStub implements CollectionInterface
     }
 
     /**
-     * Add an item to the collection
-     *
-     * @param mixed $item The item to add to the collection
-     *
-     * @return static
+     * {@inheritdoc}
      */
     public function add($item)
     {
@@ -36,9 +32,7 @@ final class CollectionInterfaceStub implements CollectionInterface
     }
 
     /**
-     * Clear all items from a collection
-     *
-     * @return static
+     * {@inheritdoc}
      */
     public function clear()
     {
@@ -46,9 +40,7 @@ final class CollectionInterfaceStub implements CollectionInterface
     }
 
     /**
-     * Collapse the collection of items into a single array
-     *
-     * @return static
+     * {@inheritdoc}
      */
     public function collapse()
     {
@@ -56,11 +48,15 @@ final class CollectionInterfaceStub implements CollectionInterface
     }
 
     /**
-     * Run a filter over each of the items
-     *
-     * @param callable $callback A callback to process against the items
-     *
-     * @return static
+     * {@inheritdoc}
+     */
+    public function count(): int
+    {
+        return 0;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function filter(callable $callback)
     {
@@ -68,9 +64,7 @@ final class CollectionInterfaceStub implements CollectionInterface
     }
 
     /**
-     * Get the first item in the collection
-     *
-     * @return mixed The first item
+     * {@inheritdoc}
      */
     public function first()
     {
@@ -78,12 +72,7 @@ final class CollectionInterfaceStub implements CollectionInterface
     }
 
     /**
-     * Get item by key
-     *
-     * @param mixed $key The item to get
-     * @param mixed $default The value to return if key isn't found
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function get($key, $default = null)
     {
@@ -91,9 +80,7 @@ final class CollectionInterfaceStub implements CollectionInterface
     }
 
     /**
-     * Get the items from the collection
-     *
-     * @return mixed[]
+     * {@inheritdoc}
      */
     public function getItems(): array
     {
@@ -101,11 +88,15 @@ final class CollectionInterfaceStub implements CollectionInterface
     }
 
     /**
-     * Determine if the collection has a specific key
-     *
-     * @param string $key The key to search for, can use dot notation
-     *
-     * @return bool
+     * {@inheritdoc}
+     */
+    public function getIterator(): Iterator
+    {
+        return new ArrayIterator($this->getItems());
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function has(string $key): bool
     {
@@ -113,36 +104,22 @@ final class CollectionInterfaceStub implements CollectionInterface
     }
 
     /**
-     * Copy keys from one collection to this collection if keys exist in both
-     *
-     * @param \EoneoPay\Utils\Interfaces\SerializableInterface $source The source to check for the key in
-     * @param mixed[] $keys The destination/source key pairs to process
-     *
-     * @return void
+     * {@inheritdoc}
      */
     public function intersect(SerializableInterface $source, array $keys): void
     {
     }
 
     /**
-     * Specify data which should be serialized to JSON
-     *
-     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
-     *
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     *
-     * @since 5.4.0
+     * {@inheritdoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }
 
     /**
-     * Get the last item in the collection
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function last()
     {
@@ -150,11 +127,7 @@ final class CollectionInterfaceStub implements CollectionInterface
     }
 
     /**
-     * Run a map over each of the items
-     *
-     * @param callable $callback A callback to process against the items
-     *
-     * @return static
+     * {@inheritdoc}
      */
     public function map(callable $callback)
     {
@@ -162,22 +135,14 @@ final class CollectionInterfaceStub implements CollectionInterface
     }
 
     /**
-     * Recursively merge an array into the collection
-     *
-     * @param mixed[] $data The data to merge into the collection
-     *
-     * @return void
+     * {@inheritdoc}
      */
     public function merge(array $data): void
     {
     }
 
     /**
-     * Get nth item from the items
-     *
-     * @param int $nth The item to get
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function nth(int $nth)
     {
@@ -185,11 +150,48 @@ final class CollectionInterfaceStub implements CollectionInterface
     }
 
     /**
-     * Remove an item from a collection
+     * {@inheritdoc}
      *
-     * @param mixed $item The item to remove
+     * @param mixed $offset
+     */
+    public function offsetExists($offset): bool
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
      *
-     * @return static
+     * @param mixed $offset
+     *
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        return 0;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param mixed $offset
+     * @param mixed $value
+     */
+    public function offsetSet($offset, $value): void
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param mixed $offset
+     */
+    public function offsetUnset($offset): void
+    {
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function remove($item)
     {
@@ -197,32 +199,21 @@ final class CollectionInterfaceStub implements CollectionInterface
     }
 
     /**
-     * Recursively replace an array's values into the collection
-     *
-     * @param mixed[] $data The data to replace in the collection
-     *
-     * @return void
+     * {@inheritdoc}
      */
     public function replace(array $data): void
     {
     }
 
     /**
-     * Set a value to the collection
-     *
-     * @param string $key The key to set to the collection, can use dot notation
-     * @param mixed $value The value to set for this key
-     *
-     * @return void
+     * {@inheritdoc}
      */
     public function set(string $key, $value): void
     {
     }
 
     /**
-     * Get the contents of the repository as an array
-     *
-     * @return mixed[]
+     * {@inheritdoc}
      */
     public function toArray(): array
     {
@@ -233,9 +224,7 @@ final class CollectionInterfaceStub implements CollectionInterface
     }
 
     /**
-     * Generate json from the repository
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function toJson(): string
     {
@@ -243,11 +232,7 @@ final class CollectionInterfaceStub implements CollectionInterface
     }
 
     /**
-     * Generate XML string from the repository
-     *
-     * @param string|null $rootNode The name of the root node
-     *
-     * @return string|null
+     * {@inheritdoc}
      */
     public function toXml(?string $rootNode = null): ?string
     {

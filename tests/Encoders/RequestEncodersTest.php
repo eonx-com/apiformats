@@ -7,7 +7,6 @@ use EoneoPay\ApiFormats\Encoders\JsonApiEncoder;
 use EoneoPay\ApiFormats\Encoders\JsonEncoder;
 use EoneoPay\ApiFormats\Encoders\UrlEncodedDataEncoder;
 use EoneoPay\ApiFormats\Encoders\XmlEncoder;
-use Psr\Http\Message\ResponseInterface;
 use Tests\EoneoPay\ApiFormats\TestCases\RequestEncoderGuesserTestCase;
 
 class RequestEncodersTest extends RequestEncoderGuesserTestCase
@@ -34,11 +33,12 @@ class RequestEncodersTest extends RequestEncoderGuesserTestCase
             $encoder = new $encoderClass();
 
             foreach ($this->getEncodersTests() as $test) {
-                self::assertNotEmpty(
-                    \is_array($encoder->setContent($encoder->encode($test)->getBody()->getContents())->decode())
-                );
+                $encoder->setContent($encoder->encode($test)->getBody()->getContents())->decode();
             }
         }
+
+        // If no exceptions were thrown, test is good
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -53,15 +53,19 @@ class RequestEncodersTest extends RequestEncoderGuesserTestCase
             $encoder = new $encoderClass($this->getRequest());
 
             foreach ($this->getEncodersTests() as $test) {
-                if ($encoder instanceof JsonApiEncoder) {
+                if (($encoder instanceof JsonApiEncoder) === true) {
                     // Always encode errors as an array
-                    self::assertTrue(\is_subclass_of($encoder->encodeError([$test]), ResponseInterface::class));
+                    $encoder->encodeError([$test]);
 
                     continue;
                 }
-                self::assertTrue(\is_subclass_of($encoder->encodeError($test), ResponseInterface::class));
+
+                $encoder->encodeError($test);
             }
         }
+
+        // If no exceptions were thrown, test is good
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -76,8 +80,11 @@ class RequestEncodersTest extends RequestEncoderGuesserTestCase
             $encoder = new $encoderClass($this->getRequest());
 
             foreach ($this->getEncodersTests() as $test) {
-                self::assertTrue(\is_subclass_of($encoder->encode($test), ResponseInterface::class));
+                $encoder->encode($test);
             }
         }
+
+        // If no exceptions were thrown, test is good
+        $this->addToAssertionCount(1);
     }
 }

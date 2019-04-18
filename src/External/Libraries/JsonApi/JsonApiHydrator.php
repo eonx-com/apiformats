@@ -54,7 +54,7 @@ class JsonApiHydrator implements JsonApiHydratorInterface
     {
         $resourceMap = [];
 
-        return $this->hydrateResource($document->primaryResource(), $document, $resourceMap);
+        return $this->hydrateResource($document, $resourceMap, $document->primaryResource());
     }
 
     /**
@@ -75,7 +75,7 @@ class JsonApiHydrator implements JsonApiHydratorInterface
                 $type = $primaryResource->type();
             }
 
-            $result[] = $this->hydrateResource($primaryResource, $document, $resourceMap);
+            $result[] = $this->hydrateResource($document, $resourceMap, $primaryResource);
         }
 
         return [$type => $result];
@@ -84,19 +84,17 @@ class JsonApiHydrator implements JsonApiHydratorInterface
     /**
      * Hydrate resource.
      *
-     * @param null|\WoohooLabs\Yang\JsonApi\Schema\ResourceObject $resource
      * @param \WoohooLabs\Yang\JsonApi\Schema\Document $document
      * @param mixed[] $resourceMap
+     * @param \WoohooLabs\Yang\JsonApi\Schema\ResourceObject|null $resource
      *
      * @return mixed[]
      */
-    private function hydrateResource(?ResourceObject $resource = null, Document $document, array &$resourceMap): array
+    private function hydrateResource(Document $document, array &$resourceMap, ?ResourceObject $resource = null): array
     {
         // This is only here for type safety, null is checked before calling method from hydrate()
         if ($resource === null) {
-            // @codeCoverageIgnoreStart
-            return [];
-            // @codeCoverageIgnoreEnd
+            return []; // @codeCoverageIgnore
         }
 
         // Fill basic attributes of the resource
@@ -112,9 +110,8 @@ class JsonApiHydrator implements JsonApiHydratorInterface
 
                 if ($object === null && $document->hasIncludedResource($link['type'], $link['id'])) {
                     $relatedResource = $document->resource($link['type'], $link['id']);
-
                     if ($relatedResource !== null) {
-                        $object = $this->hydrateResource($relatedResource, $document, $resourceMap);
+                        $object = $this->hydrateResource($document, $resourceMap, $relatedResource);
                     }
                 }
 

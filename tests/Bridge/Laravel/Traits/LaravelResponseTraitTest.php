@@ -13,6 +13,8 @@ class LaravelResponseTraitTest extends TestCase
      * Trait should throw exception if class does not define PSR-7 factory property.
      *
      * @return void
+     *
+     * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
      */
     public function testInvalidPsr7FactoryException(): void
     {

@@ -15,20 +15,23 @@
     "ext-json": "*",
     "league/fractal": "^0.17.0",
     "symfony/psr-http-message-bridge": "^1.0",
-    "zendframework/zend-diactoros": "^1.7",
-    "woohoolabs/yang": "^1.4"
+    "woohoolabs/yang": "^1.4",
+    "zendframework/zend-diactoros": "^2.1"
   },
   "require-dev": {
     "eoneopay/standards": "dev-master",
-    "illuminate/http": "^5.5",
-    "illuminate/support": "^5.5",
-    "laravel/lumen-framework": "^5.5",
+    "illuminate/http": "^5.8",
+    "illuminate/support": "^5.8",
+    "laravel/lumen-framework": "^5.8",
     "phpmd/phpmd": "^2.6",
-    "phpstan/phpstan": "^0.10",
+    "phpstan/phpstan": "^0.11.0",
+    "phpstan/phpstan-phpunit": "^0.11.0",
+    "phpstan/phpstan-strict-rules": "^0.11.0",
     "phpunit/phpunit": "^7.0",
     "roave/security-advisories": "dev-master",
     "sebastian/phpcpd": "^4.0",
-    "squizlabs/php_codesniffer": "3.*"
+    "squizlabs/php_codesniffer": "^3.0",
+    "vlucas/phpdotenv": "^3.0"
   },
   "suggest": {
     "illuminate/http": "To use the Laravel implementation",

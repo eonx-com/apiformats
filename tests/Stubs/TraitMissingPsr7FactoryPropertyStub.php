@@ -14,6 +14,8 @@ class TraitMissingPsr7FactoryPropertyStub
      * Used to throw exception from unit tests.
      *
      * @return void
+     *
+     * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
      */
     public function processTest(): void
     {

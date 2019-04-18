@@ -7,10 +7,10 @@ use Closure;
 use EoneoPay\ApiFormats\Bridge\Laravel\Interfaces\ApiFormatsMiddlewareInterface;
 use EoneoPay\ApiFormats\Bridge\Laravel\Responses\NoContentApiResponse;
 use EoneoPay\ApiFormats\Bridge\Laravel\Traits\LaravelResponseTrait;
+use EoneoPay\ApiFormats\Exceptions\ApiFormatterException;
 use EoneoPay\ApiFormats\External\Interfaces\Psr7\Psr7FactoryInterface;
 use EoneoPay\ApiFormats\Interfaces\EncoderGuesserInterface;
 use EoneoPay\ApiFormats\Interfaces\FormattedApiResponseInterface;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -47,17 +47,19 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
      * @return mixed
      *
      * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
-     * @throws \Exception
+     * @throws \EoneoPay\ApiFormats\Exceptions\ApiFormatterException
      */
     public function handle(Request $request, Closure $next)
     {
-        $psr7Request = $this->psr7Factory->createRequest($request);
+        $psr7Request = $this->getPsr7Factory()->createRequest($request);
 
         try {
             $requestEncoder = $this->encoderGuesser->guessRequestEncoder($psr7Request);
             $responseEncoder = $this->encoderGuesser->guessResponseEncoder($psr7Request);
-        } catch (Exception $exception) {
+        } /** @noinspection PhpRedundantCatchClauseInspection */ catch (ApiFormatterException $exception) {
             $request->attributes->set('_encoder', $this->encoderGuesser->defaultEncoder($psr7Request));
+
+            // Wrap exception
             throw $exception;
         }
 
@@ -66,21 +68,19 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
 
         $response = $next($request);
 
-        if ($response instanceof NoContentApiResponse) {
-            return $response;
+        if (($response instanceof FormattedApiResponseInterface) === true) {
+            return ($response instanceof NoContentApiResponse) === true ?
+                $response :
+                $this->createLaravelResponseFromPsr($responseEncoder->encode(
+                    $response->getContent(),
+                    $response->getStatusCode(),
+                    $response->getHeaders()
+                ));
         }
 
-        if ($response instanceof FormattedApiResponseInterface) {
-            return $this->createLaravelResponseFromPsr($responseEncoder->encode(
-                $response->getContent(),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ));
-        }
-
-        if ($response instanceof Response
-            || $response instanceof JsonResponse
-            || $response instanceof RedirectResponse) {
+        if (($response instanceof Response) === true
+            || ($response instanceof JsonResponse) === true
+            || ($response instanceof RedirectResponse) === true) {
             return $response;
         }
 
