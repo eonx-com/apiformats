@@ -115,8 +115,8 @@ abstract class AbstractEncoder implements EncoderInterface
     {
         $toResponseArray = [$data, 'toResponseArray'];
         // If this is serialisable or implements to response array, call it
-        if (($data instanceof SerializableInterface) === true || \is_callable($toResponseArray) === true) {
-            return \is_callable($toResponseArray) === true ? $toResponseArray() : $data->toArray();
+        if (($data instanceof SerializableInterface) === true || \method_exists(...$toResponseArray) === true) {
+            return \method_exists(...$toResponseArray) === true ? $toResponseArray() : $data->toArray();
         }
 
         // If given data is not iterable, cast result
