@@ -15,6 +15,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
@@ -67,6 +68,10 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
         $request->request = new ParameterBag($requestEncoder->decode());
 
         $response = $next($request);
+
+        if (($response instanceof ResponseInterface) === true) {
+            return $this->createLaravelResponseFromPsr($response);
+        }
 
         if (($response instanceof FormattedApiResponseInterface) === true) {
             return ($response instanceof NoContentApiResponse) === true ?
