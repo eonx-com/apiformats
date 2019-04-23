@@ -11,11 +11,10 @@ use EoneoPay\ApiFormats\Exceptions\ApiFormatterException;
 use EoneoPay\ApiFormats\External\Interfaces\Psr7\Psr7FactoryInterface;
 use EoneoPay\ApiFormats\Interfaces\EncoderGuesserInterface;
 use EoneoPay\ApiFormats\Interfaces\FormattedApiResponseInterface;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Response;
 
 class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
 {
@@ -68,6 +67,10 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
 
         $response = $next($request);
 
+        if (($response instanceof ResponseInterface) === true) {
+            return $this->createLaravelResponseFromPsr($response);
+        }
+
         if (($response instanceof FormattedApiResponseInterface) === true) {
             return ($response instanceof NoContentApiResponse) === true ?
                 $response :
@@ -78,9 +81,7 @@ class ApiFormatsMiddleware implements ApiFormatsMiddlewareInterface
                 ));
         }
 
-        if (($response instanceof Response) === true
-            || ($response instanceof JsonResponse) === true
-            || ($response instanceof RedirectResponse) === true) {
+        if (($response instanceof Response) === true) {
             return $response;
         }
 

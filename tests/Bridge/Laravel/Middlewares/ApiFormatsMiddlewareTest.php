@@ -15,6 +15,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Tests\EoneoPay\ApiFormats\Stubs\SerializableInterfaceStub;
 use Tests\EoneoPay\ApiFormats\TestCases\BridgeLaravelMiddlewaresTestCase;
+use Zend\Diactoros\Response as PsrResponse;
+use Zend\Diactoros\StreamFactory;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) High coupling required due to different formats
@@ -201,6 +203,36 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
 
         self::assertSame(\json_encode($formattedApiResponse->getContent()), $response->getContent());
         self::assertSame($formattedApiResponse->getStatusCode(), $response->getStatusCode());
+        self::assertTrue($response->headers->has('X-CUSTOM-HEADER'));
+        self::assertSame('custom', $response->headers->get('X-CUSTOM-HEADER'));
+    }
+
+    /**
+     * Middleware should return laravel response with right information if closure result is
+     * formatted api response with serializable interface as content.
+     *
+     * @return void
+     *
+     * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
+     * @throws \EoneoPay\ApiFormats\Exceptions\ApiFormatterException
+     */
+    public function testReturningPsrResponseDirectly(): void
+    {
+        $psr7Factory = new Psr7Factory();
+        $encoderGuesser = new EncoderGuesser([JsonEncoder::class => ['application/json']]);
+        $request = $this->getRequest();
+
+        $body = (new StreamFactory())->createStream('body');
+        $psrResponse = new PsrResponse($body, 201, ['X-CUSTOM-HEADER' => 'custom']);
+
+        $next = static function (Request $request) use ($psrResponse) {
+            return $psrResponse;
+        };
+
+        $response = (new ApiFormatsMiddleware($encoderGuesser, $psr7Factory))->handle($request, $next);
+
+        self::assertSame('body', $response->getContent());
+        self::assertSame(201, $response->getStatusCode());
         self::assertTrue($response->headers->has('X-CUSTOM-HEADER'));
         self::assertSame('custom', $response->headers->get('X-CUSTOM-HEADER'));
     }
