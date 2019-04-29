@@ -60,6 +60,15 @@ abstract class AbstractEncoder implements EncoderInterface
     }
 
     /**
+     * Decode request content to array.
+     *
+     * @param string $content
+     *
+     * @return mixed[]
+     */
+    abstract protected function decodeRequestContent(string $content): array;
+
+    /**
      * Create error response from given data, status code and headers.
      *
      * @param mixed $data
@@ -88,22 +97,6 @@ abstract class AbstractEncoder implements EncoderInterface
     }
 
     /**
-     * Decode request content to array.
-     *
-     * @param string $content
-     *
-     * @return mixed[]
-     */
-    abstract protected function decodeRequestContent(string $content): array;
-
-    /**
-     * Returns HTTP Content-Type header value.
-     *
-     * @return string
-     */
-    abstract protected function getContentTypeHeader(): string;
-
-    /**
      * Get array representation of given data (recursively).
      *
      * @param mixed $data Data to convert to array
@@ -113,10 +106,9 @@ abstract class AbstractEncoder implements EncoderInterface
      */
     protected function getDataAsArray($data, ?bool $isRoot = null)
     {
-        $toResponseArray = [$data, 'toResponseArray'];
-        // If this is serialisable or implements to response array, call it
-        if (($data instanceof SerializableInterface) === true || \method_exists(...$toResponseArray) === true) {
-            return \method_exists(...$toResponseArray) === true ? $toResponseArray() : $data->toArray();
+        $object = $this->serialiseData($data);
+        if ($object !== null) {
+            return $object;
         }
 
         // If given data is not iterable, cast result
@@ -126,6 +118,57 @@ abstract class AbstractEncoder implements EncoderInterface
         }
 
         return $this->processIterableObject($data);
+    }
+
+    /**
+     * Serialises data into an object
+     *
+     * @param mixed $data
+     *
+     * @return mixed|null
+     */
+    private function serialiseData($data)
+    {
+        if (($data instanceof SerializableInterface) === true) {
+            /**
+             * @var \EoneoPay\Utils\Interfaces\SerializableInterface $data
+             *
+             * @see https://youtrack.jetbrains.com/issue/WI-37859 - typehint required until PhpStorm recognises ===
+             */
+            return $data->toArray();
+        }
+
+        $toResponseArray = [$data, 'toResponseArray'];
+        if (\method_exists(...$toResponseArray) &&
+            \is_callable($toResponseArray) === true
+        ) {
+            return $toResponseArray();
+        }
+
+        return null;
+    }
+
+    /**
+     * Recursively process iterable object
+     *
+     * @param mixed $data The data to process
+     *
+     * @return mixed[]
+     */
+    private function processIterableObject($data): array
+    {
+        // At this point we know it's an array
+        $return = [];
+
+        // We process it recursively
+        if (\is_iterable($data)) {
+            foreach ($data as $key => $value) {
+                $return[$key] = $this->getDataAsArray($value, false);
+            }
+        }
+
+        // Finally, return cast as array
+        return $return;
     }
 
     /**
@@ -156,6 +199,28 @@ abstract class AbstractEncoder implements EncoderInterface
 
         // Default key for single item as array and collection of arrays
         return 'items';
+    }
+
+    /**
+     * Get resource key for serializable interface.
+     *
+     * @param \EoneoPay\Utils\Interfaces\SerializableInterface $serializable
+     *
+     * @return string
+     *
+     * @throws \ReflectionException
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess) Third party Inflector::pluralize requires static access
+     */
+    private function getResourceKeyForSerializable(SerializableInterface $serializable): string
+    {
+        // If serializable defines resource key itself, return it
+        if (\method_exists($serializable, 'getResourceKey')) {
+            return (string)$serializable->getResourceKey();
+        }
+
+        // Guess resource key based on class name
+        return Inflector::pluralize((new ReflectionClass($serializable))->getShortName());
     }
 
     /**
@@ -203,47 +268,9 @@ abstract class AbstractEncoder implements EncoderInterface
     }
 
     /**
-     * Get resource key for serializable interface.
-     *
-     * @param \EoneoPay\Utils\Interfaces\SerializableInterface $serializable
+     * Returns HTTP Content-Type header value.
      *
      * @return string
-     *
-     * @throws \ReflectionException
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess) Third party Inflector::pluralize requires static access
      */
-    private function getResourceKeyForSerializable(SerializableInterface $serializable): string
-    {
-        // If serializable defines resource key itself, return it
-        if (\method_exists($serializable, 'getResourceKey')) {
-            return (string)$serializable->getResourceKey();
-        }
-
-        // Guess resource key based on class name
-        return Inflector::pluralize((new ReflectionClass($serializable))->getShortName());
-    }
-
-    /**
-     * Recursively process iterable object
-     *
-     * @param mixed $data The data to process
-     *
-     * @return mixed[]
-     */
-    private function processIterableObject($data): array
-    {
-        // At this point we know it's an array
-        $return = [];
-
-        // We process it recursively
-        if (\is_iterable($data)) {
-            foreach ($data as $key => $value) {
-                $return[$key] = $this->getDataAsArray($value, false);
-            }
-        }
-
-        // Finally, return cast as array
-        return $return;
-    }
+    abstract protected function getContentTypeHeader(): string;
 }
