@@ -165,7 +165,7 @@ class JsonApiEncoder extends AbstractEncoder
         // If data is an object and defines getTransformer method we use it
         $getTransformer = [$data, 'getTransformer'];
         if (($data instanceof SerializableInterface) === true &&
-            \method_exists(...$getTransformer) &&
+            \method_exists(...$getTransformer) === true &&
             \is_callable($getTransformer) === true
         ) {
             $transformer = $getTransformer();
