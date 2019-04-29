@@ -139,7 +139,7 @@ abstract class AbstractEncoder implements EncoderInterface
         }
 
         $toResponseArray = [$data, 'toResponseArray'];
-        if (\method_exists(...$toResponseArray) &&
+        if (\method_exists(...$toResponseArray) === true &&
             \is_callable($toResponseArray) === true
         ) {
             return $toResponseArray();
