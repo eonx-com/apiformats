@@ -9,7 +9,8 @@ use EoneoPay\ApiFormats\Bridge\Laravel\Responses\NoContentApiResponse;
 use EoneoPay\ApiFormats\EncoderGuesser;
 use EoneoPay\ApiFormats\Encoders\JsonEncoder;
 use EoneoPay\ApiFormats\Encoders\XmlEncoder;
-use EoneoPay\ApiFormats\Exceptions\UnsupportedRequestFormatException;
+use EoneoPay\ApiFormats\Exceptions\UnsupportedAcceptHeaderException;
+use EoneoPay\ApiFormats\Exceptions\UnsupportedContentTypeHeaderException;
 use EoneoPay\ApiFormats\External\Libraries\Psr7\Psr7Factory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -24,25 +25,47 @@ use Zend\Diactoros\StreamFactory;
 class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
 {
     /**
-     * Middleware should set default encoder on request if exception thrown wile guessing encoder.
+     * Middleware should thrown an exception if it encounters a valid header with an invalid value
      *
      * @return void
      *
      * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
      * @throws \EoneoPay\ApiFormats\Exceptions\ApiFormatterException
      */
-    public function testDefaultEncoderOnRequestIfException(): void
+    public function testExceptionThrownIfRequestHeaderInvalid(): void
     {
-        $this->expectException(UnsupportedRequestFormatException::class);
+        $this->expectException(UnsupportedContentTypeHeaderException::class);
 
         $psr7Factory = new Psr7Factory();
         $encoderGuesser = new EncoderGuesser([JsonEncoder::class => ['application/json']]);
-        $request = $this->getRequest(null, ['accept' => 'invalid']);
+        $request = $this->getRequest(null, ['accept' => 'application/json', 'content-type' => 'invalid']);
 
-        (new ApiFormatsMiddleware($encoderGuesser, $psr7Factory))->handle($request, function (): void {
+        $instance = new ApiFormatsMiddleware($encoderGuesser, $psr7Factory);
+
+        $instance->handle($request, function (): void {
         });
+    }
 
-        self::assertInstanceOf(JsonEncoder::class, $request->attributes->get('_encoder'));
+    /**
+     * Middleware should thrown an exception if it encounters a valid header with an invalid value
+     *
+     * @return void
+     *
+     * @throws \EoneoPay\ApiFormats\Bridge\Laravel\Exceptions\InvalidPsr7FactoryException
+     * @throws \EoneoPay\ApiFormats\Exceptions\ApiFormatterException
+     */
+    public function testExceptionThrownIfResponseHeaderInvalid(): void
+    {
+        $this->expectException(UnsupportedAcceptHeaderException::class);
+
+        $psr7Factory = new Psr7Factory();
+        $encoderGuesser = new EncoderGuesser([JsonEncoder::class => ['application/json']]);
+        $request = $this->getRequest(null, ['accept' => 'invalid', 'content-type' => 'application/json']);
+
+        $instance = new ApiFormatsMiddleware($encoderGuesser, $psr7Factory);
+
+        $instance->handle($request, function (): void {
+        });
     }
 
     /**
