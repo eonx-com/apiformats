@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2b1eba13f2825aa31c20795b34530843",
+    "content-hash": "46a8b968f8969d48399dbda25bda6996",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -1214,16 +1214,16 @@
         },
         {
             "name": "eonx-com/standards",
-            "version": "v0.2.0",
+            "version": "v0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eonx-com/standards.git",
-                "reference": "5ebc3432efa41fc4f0df37c5c9e4eb481ca0bca7"
+                "reference": "7c240167e7eca4f379236c84222fa3982f0d78b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eonx-com/standards/zipball/5ebc3432efa41fc4f0df37c5c9e4eb481ca0bca7",
-                "reference": "5ebc3432efa41fc4f0df37c5c9e4eb481ca0bca7",
+                "url": "https://api.github.com/repos/eonx-com/standards/zipball/7c240167e7eca4f379236c84222fa3982f0d78b7",
+                "reference": "7c240167e7eca4f379236c84222fa3982f0d78b7",
                 "shasum": ""
             },
             "require": {
@@ -1267,7 +1267,7 @@
                 "eoneopay",
                 "standards"
             ],
-            "time": "2019-11-09T03:36:14+00:00"
+            "time": "2019-11-10T23:58:03+00:00"
         },
         {
             "name": "illuminate/auth",

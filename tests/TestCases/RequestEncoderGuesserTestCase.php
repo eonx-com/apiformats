@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\EoneoPay\ApiFormats\TestCases;
 
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Tests\EoneoPay\ApiFormats\Stubs\CollectionInterfaceStub;
 use Tests\EoneoPay\ApiFormats\Stubs\ObjectWithToResponseArray;
 use Tests\EoneoPay\ApiFormats\Stubs\SerializableInterfaceStub;
@@ -30,7 +31,7 @@ abstract class RequestEncoderGuesserTestCase extends TestCase
             [], // Empty response
             [new SerializableInterfaceWithGettersStub(), (new SerializableInterfaceStub())->toArray()], // Collection,
             new SerializableInterfaceStubWithToResponseArray(), // toResponseArray method
-            new \stdClass(),
+            new stdClass(),
             new TransformerAbstractAwareSerializableStub(),
             new SerializableWithMagicCallStub(),
             new ObjectWithToResponseArray()
