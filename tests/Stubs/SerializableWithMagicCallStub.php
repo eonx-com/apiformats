@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Tests\EoneoPay\ApiFormats\Stubs;
 
+use BadMethodCallException;
+
 final class SerializableWithMagicCallStub extends SerializableInterfaceStub
 {
     /**
@@ -15,7 +17,7 @@ final class SerializableWithMagicCallStub extends SerializableInterfaceStub
      */
     public function __call(string $name, array $arguments): void
     {
-        throw new \BadMethodCallException(\sprintf(
+        throw new BadMethodCallException(\sprintf(
             'Call to undefined method %s::%s()',
             \get_class($this),
             $name

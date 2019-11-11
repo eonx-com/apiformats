@@ -110,7 +110,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
                     break;
 
                 case XmlEncoder::class:
-                    self::assertXmlStringEqualsXmlString($test['content'], $response->getContent());
+                    self::assertXmlStringEqualsXmlString($test['content'], $response->getContent() ?: '');
                     break;
             }
         }
