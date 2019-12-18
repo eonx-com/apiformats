@@ -40,7 +40,7 @@ class ApiFormatsServiceProvider extends ServiceProvider implements ApiFormatsSer
         $this->mergeConfigFrom(self::CONFIG_PATH, 'api-formats');
 
         $this->app->singleton(EncoderGuesserInterface::class, $this->getRequestEncoderGuesserClosure());
-        $this->app->bind(Psr7FactoryInterface::class, Psr7Factory::class);
+        $this->app->singleton(Psr7FactoryInterface::class, Psr7Factory::class);
     }
 
     /**
