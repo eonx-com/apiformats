@@ -21,7 +21,10 @@ class JsonEncoder extends AbstractEncoder
      */
     public function encode($data, ?int $statusCode = null, ?array $headers = null): ResponseInterface
     {
-        return $this->response(\json_encode($this->getDataAsArray($data)) ?: '', $statusCode, $headers);
+        $json = \json_encode($this->getDataAsArray($data));
+        $json = $json === false ? '' : $json;
+
+        return $this->response($json, $statusCode, $headers);
     }
 
     /**

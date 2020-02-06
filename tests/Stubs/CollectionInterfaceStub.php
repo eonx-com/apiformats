@@ -228,7 +228,9 @@ final class CollectionInterfaceStub implements CollectionInterface
      */
     public function toJson(): string
     {
-        return \json_encode($this->jsonSerialize()) ?: '';
+        $json = \json_encode($this->jsonSerialize());
+
+        return $json === false ? '' : $json;
     }
 
     /**

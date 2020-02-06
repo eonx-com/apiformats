@@ -14,10 +14,10 @@ use EoneoPay\ApiFormats\Exceptions\UnsupportedContentTypeHeaderException;
 use EoneoPay\ApiFormats\External\Libraries\Psr7\Psr7Factory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Laminas\Diactoros\Response as PsrResponse;
+use Laminas\Diactoros\StreamFactory;
 use Tests\EoneoPay\ApiFormats\Stubs\SerializableInterfaceStub;
 use Tests\EoneoPay\ApiFormats\TestCases\BridgeLaravelMiddlewaresTestCase;
-use Zend\Diactoros\Response as PsrResponse;
-use Zend\Diactoros\StreamFactory;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) High coupling required due to different formats
@@ -91,7 +91,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
         ];
 
         $middleware = new ApiFormatsMiddleware(new EncoderGuesser($formats), new Psr7Factory());
-        $next = static function (Request $request) {
+        $next = static function (Request $request): array {
             return $request->all();
         };
 
@@ -104,13 +104,16 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
             /** @var \Illuminate\Http\Response $response */
             self::assertSame($test['mime_type'], $response->headers->get('Content-Type'));
 
+            $content = $response->getContent();
+            $content = $content === false ? '' : $content;
+
             switch ($encoder) {
                 case JsonEncoder::class:
-                    self::assertSame($test['content'], $response->getContent());
+                    self::assertSame($test['content'], $content);
                     break;
 
                 case XmlEncoder::class:
-                    self::assertXmlStringEqualsXmlString($test['content'], $response->getContent() ?: '');
+                    self::assertXmlStringEqualsXmlString($test['content'], $content);
                     break;
             }
         }
@@ -133,7 +136,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
         $request = $this->getRequest();
         $emptyResponse = new NoContentApiResponse();
 
-        $next = static function (Request $request) use ($emptyResponse) {
+        $next = static function (Request $request) use ($emptyResponse): NoContentApiResponse {
             return $emptyResponse;
         };
 
@@ -157,7 +160,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
         $request = $this->getRequest();
         $laravelResponse = new Response();
 
-        $next = static function (Request $request) use ($laravelResponse) {
+        $next = static function (Request $request) use ($laravelResponse): Response {
             return $laravelResponse;
         };
 
@@ -186,7 +189,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
             ['X-CUSTOM-HEADER' => 'custom']
         );
 
-        $next = static function (Request $request) use ($formattedApiResponse) {
+        $next = static function (Request $request) use ($formattedApiResponse): FormattedApiResponse {
             return $formattedApiResponse;
         };
 
@@ -218,7 +221,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
             ['X-CUSTOM-HEADER' => 'custom']
         );
 
-        $next = static function (Request $request) use ($formattedApiResponse) {
+        $next = static function (Request $request) use ($formattedApiResponse): FormattedApiResponse {
             return $formattedApiResponse;
         };
 
@@ -248,7 +251,7 @@ class ApiFormatsMiddlewareTest extends BridgeLaravelMiddlewaresTestCase
         $body = (new StreamFactory())->createStream('body');
         $psrResponse = new PsrResponse($body, 201, ['X-CUSTOM-HEADER' => 'custom']);
 
-        $next = static function (Request $request) use ($psrResponse) {
+        $next = static function (Request $request) use ($psrResponse): \Laminas\Diactoros\Response {
             return $psrResponse;
         };
 

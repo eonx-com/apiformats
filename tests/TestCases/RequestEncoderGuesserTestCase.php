@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\EoneoPay\ApiFormats\TestCases;
 
+use Laminas\Diactoros\ServerRequest;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Tests\EoneoPay\ApiFormats\Stubs\CollectionInterfaceStub;
@@ -12,7 +13,6 @@ use Tests\EoneoPay\ApiFormats\Stubs\SerializableInterfaceStubWithToResponseArray
 use Tests\EoneoPay\ApiFormats\Stubs\SerializableInterfaceWithGettersStub;
 use Tests\EoneoPay\ApiFormats\Stubs\SerializableWithMagicCallStub;
 use Tests\EoneoPay\ApiFormats\Stubs\TransformerAbstractAwareSerializableStub;
-use Zend\Diactoros\ServerRequest;
 
 abstract class RequestEncoderGuesserTestCase extends TestCase
 {
@@ -44,7 +44,7 @@ abstract class RequestEncoderGuesserTestCase extends TestCase
      * @param string|null $accept
      * @param string|null $contentType
      *
-     * @return \Zend\Diactoros\ServerRequest
+     * @return \Laminas\Diactoros\ServerRequest
      */
     protected function getRequest(?string $accept = null, ?string $contentType = null): ServerRequest
     {

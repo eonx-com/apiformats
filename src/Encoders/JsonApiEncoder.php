@@ -86,7 +86,10 @@ class JsonApiEncoder extends AbstractEncoder
             $errors = [$errors];
         }
 
-        return $this->response(\json_encode(['errors' => $errors]) ?: '', $statusCode, $headers);
+        $content = \json_encode(['errors' => $errors]);
+        $content = $content === false ? '' : $content;
+
+        return $this->response($content, $statusCode, $headers);
     }
 
     /**
@@ -124,8 +127,11 @@ class JsonApiEncoder extends AbstractEncoder
      */
     private function emptyResponse(?int $statusCode = null, ?array $headers = null): ResponseInterface
     {
+        $content = \json_encode($this->fractal->createData(new NullResource())->toArray());
+        $content = $content === false ? '' : $content;
+
         return $this->response(
-            \json_encode($this->fractal->createData(new NullResource())->toArray()) ?: '',
+            $content,
             $statusCode,
             $headers
         );

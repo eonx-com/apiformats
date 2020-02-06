@@ -271,8 +271,8 @@ class EncoderGuesser implements EncoderGuesserInterface
      */
     private function setMimeTypes(array $formats): void
     {
+        /** @var mixed[] $mimeTypes */
         foreach ($formats as $encoder => $mimeTypes) {
-            /** @var array $mimeTypes */
             foreach ($mimeTypes as $mimeType) {
                 $this->mimeTypes[$mimeType] = $encoder;
             }

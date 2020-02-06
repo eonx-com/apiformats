@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Tests\EoneoPay\ApiFormats\Stubs;
 
 use EoneoPay\ApiFormats\Bridge\Laravel\Traits\LaravelResponseTrait;
-use Zend\Diactoros\Response;
+use Laminas\Diactoros\Response;
 
 class TraitMissingPsr7FactoryPropertyStub
 {

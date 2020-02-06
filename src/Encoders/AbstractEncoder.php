@@ -7,11 +7,11 @@ use Doctrine\Common\Inflector\Inflector;
 use EoneoPay\ApiFormats\Exceptions\DecodeNullRequestException;
 use EoneoPay\ApiFormats\Interfaces\EncoderInterface;
 use EoneoPay\Utils\Interfaces\SerializableInterface;
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\Stream;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\Stream;
 
 abstract class AbstractEncoder implements EncoderInterface
 {

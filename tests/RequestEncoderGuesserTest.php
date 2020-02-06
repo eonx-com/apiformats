@@ -130,8 +130,8 @@ class RequestEncoderGuesserTest extends RequestEncoderGuesserTestCase
 
         $guesser = new EncoderGuesser($formats);
 
+        /** @var mixed[] $mimeTypes */
         foreach ($tests as $encoderClass => $mimeTypes) {
-            /** @var array $mimeTypes */
             foreach ($mimeTypes as $mimeType) {
                 /** @noinspection UnnecessaryAssertionInspection Return type hint is interface not specific class */
                 self::assertInstanceOf($encoderClass, $guesser->guessEncoder($this->getRequest($mimeType)));
