@@ -16,7 +16,7 @@
     "laminas/laminas-diactoros": "^2.1",
     "league/fractal": "^0.17.0 || ^0.19",
     "symfony/psr-http-message-bridge": "^1.0",
-    "woohoolabs/yang": "^1.4"
+    "woohoolabs/yang": "^2.2"
   },
   "require-dev": {
     "eonx-com/standards": "^0.3",
