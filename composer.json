@@ -9,7 +9,7 @@
   "license": "BSD-3-Clause",
   "type": "package",
   "require": {
-    "php": ">=7.1",
+    "php": "^7.2",
     "doctrine/inflector": "^1.3",
     "eonx-com/utils": "^1.0 || ^2.0",
     "ext-json": "*",
@@ -19,6 +19,7 @@
     "woohoolabs/yang": "^1.4"
   },
   "require-dev": {
+    "eonx-com/easy-test": "^2.3",
     "eonx-com/standards": "^0.3",
     "illuminate/http": "^5.8 || ^6.0",
     "illuminate/support": "^5.8 || ^6.0",
@@ -35,6 +36,25 @@
   },
   "replace": {
     "eoneopay/apiformats": "*"
+  },
+  "scripts":{
+    "code-sniffer": "phpcs --standard=vendor/eonx-com/standards/php-code-sniffer/EoneoPay --colors --report=full src tests -p",
+    "copy-paste-detector": "phpcpd --ansi --min-lines=5 --min-tokens=70 src tests",
+    "mess-detector": "phpmd src,tests text phpmd.xml",
+    "phpstan": "phpstan analyze src tests -c phpstan.neon --ansi --level max --memory-limit=2048M",
+    "phpunit": "phpunit --configuration phpunit.xml",
+    "coverage": [
+      "@composer phpunit -- --coverage-text=coverage_output.txt --coverage-html=coverage-html",
+      "tar zcf coverage-html.tgz --directory=coverage-html .",
+      "easy-test check-coverage -c 100 coverage_output.txt"
+    ],
+    "standards": [
+      "@code-sniffer",
+      "@copy-paste-detector",
+      "@mess-detector",
+      "@phpstan",
+      "@phpunit"
+    ]
   },
   "suggest": {
     "illuminate/http": "To use the Laravel implementation",
@@ -53,7 +73,6 @@
   "provide": {
     "php-http/client-implementation": "1.0"
   },
-  "optimize-autoloader": true,
   "minimum-stability": "stable",
   "prefer-stable": true
 }

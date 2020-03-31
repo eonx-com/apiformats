@@ -1,0 +1,50 @@
+name: PHP-CI
+
+on: [push]
+
+jobs:
+  coding_standards:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '7.2', '7.3', '7.4' ]
+        actions:
+          - { name: Code sniffer, run: composer code-sniffer }
+          - { name: Copy paste detector, run: composer copy-paste-detector }
+          - { name: Mess detector, run: composer mess-detector }
+          - { name: PHPStan, run: composer phpstan }
+          - { name: PHPUnit, run: composer coverage, coverage: pcov, artifact: coverage-html.tgz }
+
+    name: ${{ matrix.actions.name}} (${{ matrix.php }})
+
+    steps:
+      -   uses: eonx-com/actions-checkout@v2
+
+      -   uses: eonx-com/actions-setup-php@v1
+          with:
+            php-version: ${{ matrix.php }}
+            coverage: ${{ matrix.actions.coverage }}
+
+      -   id: composer-cache
+          run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      -   uses: eonx-com/actions-cache@v1
+          with:
+            path: ${{ steps.composer-cache.outputs.dir }}
+            key: ${{ matrix.php }}-comp-${{ hashFiles('**/composer.json') }}
+            restore-keys: ${{ matrix.php }}-comp-
+
+      -   run: composer global require hirak/prestissimo
+      -   run: composer install --prefer-dist --no-progress
+
+      -   name: '[CI] Check ${{ matrix.actions.name }} [CI]'
+          run: ${{ matrix.actions.run }}
+          shell: bash
+
+      -   name: Upload artifacts
+          if: matrix.actions.artifact
+          uses: eonx-com/actions-upload-artifact@v1
+          with:
+            name: '${{ matrix.php }}-${{ matrix.actions.artifact }}'
+            path: coverage-html.tgz
